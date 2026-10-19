@@ -1,3 +1,28 @@
+import DOMPurify from 'dompurify';
+
+// Configure DOMPurify to allow valid internal portfolio UI handlers while blocking malicious payloads
+DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+  if (data.attrName === 'onclick') {
+    if (/^[a-zA-Z0-9_$]+\([^()]*\)$/.test(data.attrValue.trim())) {
+      data.forceKeepAttr = true;
+    }
+  }
+});
+
+/**
+ * Security: DOMPurify Sanitizer for all dynamic HTML injections
+ */
+function sanitizeHtml(dirty) {
+  if (!dirty) return '';
+  return DOMPurify.sanitize(dirty, {
+    ADD_ATTR: [
+      'target', 'rel', 'download', 'loading', 'draggable', 'data-index',
+      'data-lang', 'data-i18n', 'aria-label', 'aria-hidden', 'aria-modal', 'role'
+    ],
+    ADD_TAGS: ['iframe']
+  });
+}
+
 /**
  * Mohammed Abdeldjebar Moulay Lekbir - Portfolio Engine
  * Clean, lightweight, direct presentation focusing on KiCad & Embedded Systems.
@@ -864,7 +889,7 @@ function applyStaticTranslations() {
     const key = el.getAttribute('data-i18n');
     const val = t(key);
     if (val && val !== key) {
-      el.innerHTML = val;
+      el.innerHTML = sanitizeHtml(val);
     }
   });
 }
@@ -1061,7 +1086,7 @@ function renderHero() {
 
   const heroBio = document.getElementById('hero-bio');
   if (heroBio) {
-    heroBio.innerHTML = isDefaultBio ? t('heroBio') : (p.bio || '');
+    heroBio.innerHTML = sanitizeHtml(isDefaultBio ? t('heroBio') : (p.bio || ''));
   }
 
   const linkEmail = document.getElementById('link-email');
@@ -1087,7 +1112,7 @@ function renderHero() {
       editBtn.className = 'btn btn-outline admin-only';
       editBtn.style.borderColor = 'var(--accent-primary)';
       editBtn.style.color = 'var(--accent-primary)';
-      editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Profile';
+      editBtn.innerHTML = sanitizeHtml('<i class="fa-solid fa-pen-to-square"></i> Edit Profile');
       editBtn.onclick = () => openAdminControlPanel('profile');
       ctaGroup.appendChild(editBtn);
     }
@@ -1101,7 +1126,7 @@ function renderProjects() {
   const grid = document.getElementById('projects-grid');
   if (!grid || !appData.projects) return;
 
-  grid.innerHTML = appData.projects.map((p, idx) => {
+  grid.innerHTML = sanitizeHtml(appData.projects.map((p, idx) => {
     const images = p.gallery && p.gallery.length > 0 ? p.gallery : [p.image];
     let mediaMarkup = '';
 
@@ -1158,7 +1183,7 @@ function renderProjects() {
         </div>
       </article>
     `;
-  }).join('');
+  }).join(''));
 }
 
 /**
@@ -1174,7 +1199,7 @@ function renderSkills() {
     "IoT & Protocols": "fa-network-wired"
   };
 
-  grid.innerHTML = appData.skills.map((cat, catIdx) => {
+  grid.innerHTML = sanitizeHtml(appData.skills.map((cat, catIdx) => {
     const iconClass = categoryIcons[cat.category] || "fa-layer-group";
     const locCat = getLocalizedSkillCategory(cat.category);
 
@@ -1210,7 +1235,7 @@ function renderSkills() {
         ${adminActions}
       </div>
     `;
-  }).join('');
+  }).join(''));
 }
 
 /**
@@ -1287,7 +1312,7 @@ function renderMilestones() {
   const icons = ["fa-award", "fa-graduation-cap", "fa-trophy"];
   const loggedIn = isAdminLoggedIn();
 
-  container.innerHTML = `
+  container.innerHTML = sanitizeHtml(`
     <div class="timeline-container">
       ${appData.milestones.map((m, idx) => {
     const icon = icons[idx % icons.length];
@@ -1338,7 +1363,7 @@ function renderMilestones() {
         `;
   }).join('')}
     </div>
-  `;
+  `);
 }
 
 /**
@@ -1508,7 +1533,7 @@ function renderContactCards() {
     `);
   }
 
-  container.innerHTML = cards.join('');
+  container.innerHTML = sanitizeHtml(cards.join(''));
 }
 
 /**
@@ -1524,23 +1549,23 @@ function openProjectModal(id) {
   document.getElementById('modal-title').innerText = loc.title;
   const catEl = document.getElementById('modal-category');
   if (catEl) {
-    catEl.innerHTML = `<i class="fa-solid ${catIcon}"></i> ${loc.category} &bull; ${t('modalSpecsHeader')}`;
+    catEl.innerHTML = sanitizeHtml(`<i class="fa-solid ${catIcon}"></i> ${loc.category} &bull; ${t('modalSpecsHeader')}`);
   }
   document.getElementById('modal-project-img').src = sanitizeUrl(p.image);
   document.getElementById('modal-desc').innerText = loc.fullDescription || loc.shortDesc;
 
   // Specs
   const specsTable = document.getElementById('modal-specs-table');
-  specsTable.innerHTML = Object.entries(p.specs || {}).map(([k, v]) => {
+  specsTable.innerHTML = sanitizeHtml(Object.entries(p.specs || {}).map(([k, v]) => {
     const locKey = (specsTranslations[k] && specsTranslations[k][currentLang]) || k;
     return `<tr><td>${escapeHtml(locKey)}</td><td>${escapeHtml(v)}</td></tr>`;
-  }).join('');
+  }).join(''));
 
   // Components
   const compList = document.getElementById('modal-components-list');
-  compList.innerHTML = (p.components || []).map(c => `
+  compList.innerHTML = sanitizeHtml((p.components || []).map(c => `
     <span class="modal-tech-chip">${escapeHtml(c)}</span>
-  `).join('');
+  `).join(''));
 
   // Firmware & Source Code
   const codeSection = document.getElementById('modal-code-section');
@@ -1575,11 +1600,11 @@ function openProjectModal(id) {
   const allImages = p.gallery && p.gallery.length > 0 ? p.gallery : [p.image];
   activeLightboxImages = allImages;
   const galGrid = document.getElementById('modal-gallery-grid');
-  galGrid.innerHTML = allImages.map((img, i) => `
+  galGrid.innerHTML = sanitizeHtml(allImages.map((img, i) => `
     <div class="modal-gallery-thumb" onclick="openLightbox(activeLightboxImages, ${i})">
       <img src="${sanitizeUrl(img)}" alt="${escapeHtml(loc.title)}" loading="lazy">
     </div>
-  `).join('');
+  `).join(''));
 
   document.getElementById('project-modal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1681,7 +1706,7 @@ function setupResumeModal() {
     bottomDownloadBtn.setAttribute('download', filename);
   }
 
-  content.innerHTML = `
+  content.innerHTML = sanitizeHtml(`
     <div class="resume-pdf-container">
       <iframe src="${pdfUrl}#toolbar=1&navpanes=0" class="resume-pdf-frame" id="resume-pdf-iframe" title="Mohammed Moulay Lekbir Resume PDF"></iframe>
       <div class="resume-pdf-fallback">
@@ -1702,7 +1727,7 @@ function setupResumeModal() {
         </div>
       </div>
     </div>
-  `;
+  `);
 }
 
 function openResumeModal() {
@@ -1725,7 +1750,7 @@ function printResume() {
       return;
     } catch (e) { }
   }
-  window.open(pdfUrl, '_blank');
+  window.open(pdfUrl, '_blank', 'noopener,noreferrer');
 }
 
 /**
@@ -1785,7 +1810,7 @@ async function handleAdminLogin(e) {
     const remainingSecs = Math.ceil((lockout.lockUntil - now) / 1000);
     if (alertEl) {
       alertEl.style.display = 'block';
-      alertEl.innerHTML = `<i class="fa-solid fa-lock"></i> Security Lockout: Too many failed attempts. Try again in <b>${remainingSecs}s</b>.`;
+      alertEl.innerHTML = sanitizeHtml(`<i class="fa-solid fa-lock"></i> Security Lockout: Too many failed attempts. Try again in <b>${remainingSecs}s</b>.`);
     }
     return;
   }
@@ -1824,14 +1849,14 @@ async function handleAdminLogin(e) {
       localStorage.setItem(ADMIN_LOCKOUT_KEY, JSON.stringify(lockout));
       if (alertEl) {
         alertEl.style.display = 'block';
-        alertEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Too many failed attempts. Login locked for 5 minutes.`;
+        alertEl.innerHTML = sanitizeHtml(`<i class="fa-solid fa-triangle-exclamation"></i> Too many failed attempts. Login locked for 5 minutes.`);
       }
       return;
     }
     localStorage.setItem(ADMIN_LOCKOUT_KEY, JSON.stringify(lockout));
     if (alertEl) {
       alertEl.style.display = 'block';
-      alertEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Invalid email or password. Attempt ${lockout.attempts} of 5.`;
+      alertEl.innerHTML = sanitizeHtml(`<i class="fa-solid fa-circle-exclamation"></i> Invalid email or password. Attempt ${lockout.attempts} of 5.`);
     }
   }
 }
@@ -1855,7 +1880,7 @@ function togglePasswordVisibility(inputId, btn) {
   const isPass = input.type === 'password';
   input.type = isPass ? 'text' : 'password';
   if (btn) {
-    btn.innerHTML = isPass ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+    btn.innerHTML = sanitizeHtml(isPass ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>');
   }
 }
 
@@ -1883,7 +1908,7 @@ function updateAdminUI() {
   if (mobileAdminBtn) {
     mobileAdminBtn.style.display = loggedIn ? 'inline-flex' : 'none';
     if (loggedIn) {
-      mobileAdminBtn.innerHTML = '<i class="fa-solid fa-lock-open"></i> Admin Active';
+      mobileAdminBtn.innerHTML = sanitizeHtml('<i class="fa-solid fa-lock-open"></i> Admin Active');
     }
   }
 
@@ -2041,7 +2066,7 @@ function populateAdminProjectsList() {
   const container = document.getElementById('admin-projects-list');
   if (!container || !appData.projects) return;
 
-  container.innerHTML = appData.projects.map((p, idx) => `
+  container.innerHTML = sanitizeHtml(appData.projects.map((p, idx) => `
     <div class="admin-list-item">
       <div class="admin-list-item-info">
         <img src="${p.image}" class="admin-list-item-thumb" alt="${p.title}">
@@ -2057,7 +2082,7 @@ function populateAdminProjectsList() {
         <button onclick="deleteProject('${p.id}')" class="admin-card-btn admin-card-btn-del"><i class="fa-solid fa-trash"></i></button>
       </div>
     </div>
-  `).join('');
+  `).join(''));
 }
 
 function moveProject(id, dir) {
@@ -2269,11 +2294,11 @@ function addSpecRow(key = '', val = '') {
   if (!container) return;
   const row = document.createElement('div');
   row.className = 'admin-spec-row';
-  row.innerHTML = `
+  row.innerHTML = sanitizeHtml(`
     <input type="text" class="admin-input spec-key" placeholder="Key (e.g. Microcontroller)" value="${key}">
     <input type="text" class="admin-input spec-val" placeholder="Value (e.g. ESP32-C3)" value="${val}">
     <button type="button" class="admin-row-delete-btn" onclick="this.parentElement.remove()" title="Delete Spec"><i class="fa-solid fa-trash"></i></button>
-  `;
+  `);
   container.appendChild(row);
 }
 
@@ -2282,7 +2307,7 @@ function addGalleryPhotoRow(url = '') {
   if (!container) return;
   const row = document.createElement('div');
   row.className = 'admin-gallery-row';
-  row.innerHTML = `
+  row.innerHTML = sanitizeHtml(`
     <div class="gallery-row-thumb">
       ${url ? `<img src="${url}" alt="Thumbnail">` : `<i class="fa-solid fa-image"></i>`}
     </div>
@@ -2292,7 +2317,7 @@ function addGalleryPhotoRow(url = '') {
       <input type="file" accept="image/*" style="display:none;" onchange="handleSingleGalleryRowUpload(event, this)">
     </label>
     <button type="button" class="admin-row-delete-btn" onclick="this.parentElement.remove()" title="Delete Photo"><i class="fa-solid fa-trash"></i></button>
-  `;
+  `);
   container.appendChild(row);
 }
 
@@ -2303,9 +2328,9 @@ function updateGalleryRowThumb(input) {
   if (!thumb) return;
   const val = input.value.trim();
   if (val) {
-    thumb.innerHTML = `<img src="${val}" alt="Thumbnail">`;
+    thumb.innerHTML = sanitizeHtml(`<img src="${val}" alt="Thumbnail">`);
   } else {
-    thumb.innerHTML = `<i class="fa-solid fa-image"></i>`;
+    thumb.innerHTML = sanitizeHtml(`<i class="fa-solid fa-image"></i>`);
   }
 }
 
@@ -2413,10 +2438,10 @@ function copyProjectCode(btn) {
   navigator.clipboard.writeText(text).then(() => {
     if (btn) {
       const origHtml = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> <span class="copy-text">Copied!</span>`;
+      btn.innerHTML = sanitizeHtml(`<i class="fa-solid fa-check"></i> <span class="copy-text">Copied!</span>`);
       btn.classList.add('btn-copied');
       setTimeout(() => {
-        btn.innerHTML = origHtml;
+        btn.innerHTML = sanitizeHtml(origHtml);
         btn.classList.remove('btn-copied');
       }, 2000);
     }
@@ -2562,7 +2587,7 @@ function populateAdminSkillsList() {
   const container = document.getElementById('admin-skills-list');
   if (!container || !appData.skills) return;
 
-  container.innerHTML = appData.skills.map((cat, catIdx) => `
+  container.innerHTML = sanitizeHtml(appData.skills.map((cat, catIdx) => `
     <div class="admin-section-block" style="margin-bottom: 0.75rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -2582,7 +2607,7 @@ function populateAdminSkillsList() {
         `).join('')}
       </div>
     </div>
-  `).join('');
+  `).join(''));
 }
 
 function addNewSkillCategory() {
@@ -2631,7 +2656,7 @@ function populateAdminMilestonesList() {
   const container = document.getElementById('admin-milestones-list');
   if (!container || !appData.milestones) return;
 
-  container.innerHTML = appData.milestones.map((m, idx) => `
+  container.innerHTML = sanitizeHtml(appData.milestones.map((m, idx) => `
     <div class="admin-list-item" draggable="true"
          data-index="${idx}"
          ondragstart="handleMilestoneDragStart(event, ${idx})"
@@ -2653,7 +2678,7 @@ function populateAdminMilestonesList() {
         <button type="button" onclick="deleteMilestone(${idx})" class="admin-card-btn admin-card-btn-del" title="Delete milestone"><i class="fa-solid fa-trash"></i></button>
       </div>
     </div>
-  `).join('');
+  `).join(''));
 }
 
 function openMilestoneEditModal(idx = null) {
@@ -2813,7 +2838,7 @@ function saveAdminPdfUrl() {
 
 function testOpenCurrentPdf() {
   const url = getResumePdfUrl();
-  window.open(url, '_blank');
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function downloadCurrentPdf() {
@@ -3100,13 +3125,13 @@ function initNavigation() {
     toggleBtn.addEventListener('click', () => {
       const isOpen = drawer.classList.contains('open');
       drawer.classList.toggle('open', !isOpen);
-      toggleBtn.innerHTML = isOpen ? '<i class="fa-solid fa-bars"></i>' : '<i class="fa-solid fa-xmark"></i>';
+      toggleBtn.innerHTML = sanitizeHtml(isOpen ? '<i class="fa-solid fa-bars"></i>' : '<i class="fa-solid fa-xmark"></i>');
     });
 
     drawer.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         drawer.classList.remove('open');
-        toggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        toggleBtn.innerHTML = sanitizeHtml('<i class="fa-solid fa-bars"></i>');
       });
     });
   }
@@ -3200,6 +3225,119 @@ function showToast(message) {
   setTimeout(() => toast.remove(), 2500);
 }
 
+/**
+ * Contact Form Submission Handler
+ * Protected with honeypot verification, client-side input sanitization, and serverless /api/contact handling
+ */
+async function handleContactSubmit(e) {
+  if (e) e.preventDefault();
+  const form = document.getElementById('contact-direct-form');
+  const statusEl = document.getElementById('contact-form-status');
+  const submitBtn = document.getElementById('contact-submit-btn');
+  if (!form) return;
+
+  const honeypot = (form.querySelector('input[name="_gotcha"]') || {}).value || '';
+  // Honeypot trap: if filled, abort silently (bot detected)
+  if (honeypot.trim().length > 0) {
+    if (statusEl) {
+      statusEl.className = 'contact-status-msg success';
+      statusEl.textContent = 'Message sent successfully!';
+    }
+    form.reset();
+    return;
+  }
+
+  const nameInput = document.getElementById('contact-name');
+  const emailInput = document.getElementById('contact-email');
+  const subjectInput = document.getElementById('contact-subject');
+  const messageInput = document.getElementById('contact-message');
+
+  const name = (nameInput ? nameInput.value : '').trim();
+  const email = (emailInput ? emailInput.value : '').trim();
+  const subject = (subjectInput ? subjectInput.value : '').trim();
+  const message = (messageInput ? messageInput.value : '').trim();
+
+  // Client validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!name || name.length < 2) {
+    if (statusEl) {
+      statusEl.className = 'contact-status-msg error';
+      statusEl.textContent = 'Please enter your name.';
+    }
+    nameInput?.focus();
+    return;
+  }
+  if (!email || !emailRegex.test(email)) {
+    if (statusEl) {
+      statusEl.className = 'contact-status-msg error';
+      statusEl.textContent = 'Please enter a valid email address.';
+    }
+    emailInput?.focus();
+    return;
+  }
+  if (!message || message.length < 10) {
+    if (statusEl) {
+      statusEl.className = 'contact-status-msg error';
+      statusEl.textContent = 'Message must be at least 10 characters long.';
+    }
+    messageInput?.focus();
+    return;
+  }
+
+  // UI loading state
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = sanitizeHtml('<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending...</span>');
+  }
+  if (statusEl) {
+    statusEl.className = 'contact-status-msg';
+    statusEl.textContent = 'Transmitting message securely...';
+  }
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: DOMPurify.sanitize(name),
+        email: DOMPurify.sanitize(email),
+        subject: DOMPurify.sanitize(subject),
+        message: DOMPurify.sanitize(message),
+        _gotcha: ''
+      })
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      if (statusEl) {
+        statusEl.className = 'contact-status-msg success';
+        statusEl.textContent = data.message || 'Thank you! Your message was sent successfully.';
+      }
+      form.reset();
+      showToast('Message sent successfully!');
+    } else {
+      throw new Error(data.error || 'Server rejected submission');
+    }
+  } catch (err) {
+    console.warn('API submission failed, initiating sanitized email client fallback:', err);
+    // Fallback: sanitized mailto trigger
+    const cleanTo = (appData?.personal?.email) || 'aedmoulay05@gmail.com';
+    const mailtoUrl = `mailto:${encodeURIComponent(cleanTo)}?subject=${encodeURIComponent(subject || 'Portfolio Collaboration')}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
+    window.open(mailtoUrl, '_blank', 'noopener,noreferrer');
+    if (statusEl) {
+      statusEl.className = 'contact-status-msg success';
+      statusEl.textContent = 'Opening your secure email client...';
+    }
+    showToast('Redirected to email client');
+    form.reset();
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = sanitizeHtml('<i class="fa-solid fa-paper-plane"></i> <span>Send Message</span>');
+    }
+  }
+}
+
 // Global Exports to window for inline onclick/onsubmit attributes
 Object.assign(window, {
   initPortfolio,
@@ -3226,6 +3364,7 @@ Object.assign(window, {
   handleMilestoneDragLeave,
   handleMilestoneDrop,
   handleMilestoneDragEnd,
+  handleContactSubmit,
   // Admin Methods
   openAdminAuthModal,
   closeAdminAuthModal,
