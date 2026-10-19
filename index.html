@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO Meta Tags -->
+  <title>Mohammed Abdeldjebar Moulay Lekbir | KiCad PCB & Embedded Systems</title>
+  <meta name="title" content="Mohammed Abdeldjebar Moulay Lekbir | KiCad PCB & Embedded Systems">
+  <meta name="description"
+    content="Portfolio of Mohammed Abdeldjebar Moulay Lekbir. Founder of Iotrixa (Arrêté 1275). KiCad PCB designer, STM32/ESP32 embedded firmware developer, and competitive robotics engineer.">
+  <meta name="keywords"
+    content="KiCad PCB Designer, Embedded Systems, Electrotechnics, STM32, ESP32, FreeRTOS, Iotrixa, Arrêté 1275, Algeria">
+  <meta name="author" content="Mohammed Abdeldjebar Moulay Lekbir">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mohammed Abdeldjebar Moulay Lekbir | KiCad PCB & Embedded Systems">
+  <meta property="og:description"
+    content="Custom KiCad PCB designs, IoT telemetry hardware, FreeRTOS firmware, and robotics control systems.">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1Jen7Dyb-DcCdHge8RQVyr436Np-zMkZt">
+
+  <!-- Modern Engineering & Multilingual Typography: Plus Jakarta Sans, JetBrains Mono & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Modern Engineering Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mohammed Abdeldjebar Moulay Lekbir",
+    "jobTitle": "KiCad PCB Designer & Embedded Systems Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Iotrixa"
+    },
+    "email": "aedmoulay05@gmail.com",
+    "url": "https://github.com/moha3bdj",
+    "sameAs": [
+      "https://www.linkedin.com/in/moulay-lekbir-mohammed-abdeldjebar-a3526b307/",
+      "https://github.com/moha3bdj"
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <!-- Precision Technical Background -->
+  <div class="tech-grid-bg" aria-hidden="true"></div>
+  <div class="ambient-light-top" aria-hidden="true"></div>
+
+  <!-- Admin Mode Top Bar (Visible when authenticated) -->
+  <aside id="admin-bar" class="admin-bar" style="display: none;" aria-label="Admin Control Bar">
+    <div class="container admin-bar-inner">
+      <div class="admin-bar-status">
+        <span class="admin-status-dot"></span>
+        <span class="admin-status-title">ADMIN MODE</span>
+        <span class="admin-user-pill"><i class="fa-solid fa-user-shield"></i> <span
+            id="admin-bar-email">aedmoulay05@gmail.com</span></span>
+      </div>
+      <div class="admin-bar-actions">
+        <button onclick="openAdminControlPanel()" class="admin-bar-btn admin-bar-btn-primary" id="btn-admin-dashboard">
+          <i class="fa-solid fa-sliders"></i> Control Panel
+        </button>
+        <button onclick="openProjectEditModal()" class="admin-bar-btn" id="btn-admin-add-project">
+          <i class="fa-solid fa-plus"></i> New Project
+        </button>
+        <button onclick="openMilestoneEditModal()" class="admin-bar-btn" id="btn-admin-add-milestone">
+          <i class="fa-solid fa-plus"></i> Milestone
+        </button>
+        <button onclick="exportDataJson()" class="admin-bar-btn" id="btn-admin-export">
+          <i class="fa-solid fa-download"></i> Export JSON
+        </button>
+        <button onclick="logoutAdmin()" class="admin-bar-btn admin-bar-btn-danger" id="btn-admin-logout"
+          title="Exit Admin Mode">
+          <i class="fa-solid fa-right-from-bracket"></i> Exit
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       Navigation Bar
+       ========================================================================= -->
+  <header class="navbar" id="top-navbar">
+    <div class="container navbar-inner">
+
+      <a href="#hero" class="brand" aria-label="Home">
+        <div class="brand-avatar-wrapper">
+          <img src="https://lh3.googleusercontent.com/d/1Jen7Dyb-DcCdHge8RQVyr436Np-zMkZt"
+            alt="Mohammed Abdeldjebar Moulay Lekbir" id="nav-avatar" class="brand-avatar">
+        </div>
+        <div class="brand-text">
+          <span class="brand-name" id="nav-name">Mohammed Moulay Lekbir</span>
+          <span class="brand-role" id="nav-title" data-i18n="heroRole">KiCad PCB &amp; Embedded Systems</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#projects" class="nav-link" data-i18n="navProjects">Projects</a></li>
+          <li><a href="#skills" class="nav-link" data-i18n="navSkills">Skills</a></li>
+          <li><a href="#milestones" class="nav-link" data-i18n="navMilestones">Milestones</a></li>
+          <li><a href="#contact" class="nav-link" data-i18n="navContact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="btn btn-outline btn-icon-only" onclick="toggleTheme()"
+          aria-label="Toggle Light/Dark Theme" title="Toggle Light/Dark Mode">
+          <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </button>
+
+        <!-- Language Switcher Dropdown -->
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="btn btn-outline btn-sm lang-btn" id="lang-toggle-btn" onclick="toggleLangDropdown(event)"
+            aria-haspopup="true" aria-expanded="false" title="Change Language">
+            <i class="fa-solid fa-globe"></i>
+            <span id="current-lang-label">EN</span>
+            <i class="fa-solid fa-chevron-down lang-chevron"></i>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button class="lang-option active" data-lang="en" onclick="setLanguage('en')">
+              <span class="lang-code">EN</span>
+              <span class="lang-name">English</span>
+            </button>
+            <button class="lang-option" data-lang="fr" onclick="setLanguage('fr')">
+              <span class="lang-code">FR</span>
+              <span class="lang-name">Français</span>
+            </button>
+            <button class="lang-option" data-lang="ar" onclick="setLanguage('ar')">
+              <span class="lang-code">AR</span>
+              <span class="lang-name">العربية</span>
+            </button>
+          </div>
+        </div>
+
+        <button onclick="openResumeModal()" class="btn btn-secondary btn-sm" id="btn-nav-resume">
+          <i class="fa-solid fa-file-pdf"></i> <span data-i18n="navResume">Resume</span>
+        </button>
+        <button onclick="toggleAdminAuth()" class="btn btn-outline btn-sm" id="btn-admin-access"
+          title="Admin Mode (Ctrl+Shift+A)" style="display: none;">
+          <i class="fa-solid fa-lock" id="btn-admin-icon"></i> <span id="btn-admin-label"
+            data-i18n="navAdmin">Admin</span>
+        </button>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <div class="mobile-drawer-controls">
+        <button class="btn btn-outline btn-sm" onclick="toggleTheme()" id="mobile-theme-btn"
+          style="flex: 1; justify-content: center;">
+          <i class="fa-solid fa-sun" id="mobile-theme-icon"></i> <span id="mobile-theme-label">Light Mode</span>
+        </button>
+        <div class="mobile-lang-pills">
+          <button class="mobile-lang-pill active" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="mobile-lang-pill" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+          <button class="mobile-lang-pill" data-lang="ar" onclick="setLanguage('ar')">العربية</button>
+        </div>
+      </div>
+      <a href="#projects" class="nav-link" data-i18n="navProjects">Projects</a>
+      <a href="#skills" class="nav-link" data-i18n="navSkills">Skills</a>
+      <a href="#milestones" class="nav-link" data-i18n="navMilestones">Milestones</a>
+      <a href="#contact" class="nav-link" data-i18n="navContact">Contact</a>
+      <button onclick="openResumeModal()" class="btn btn-primary btn-sm" style="margin-top: 0.5rem;">
+        <i class="fa-solid fa-file-pdf"></i> <span data-i18n="viewResume">View Resume</span>
+      </button>
+      <button onclick="toggleAdminAuth()" class="btn btn-secondary btn-sm" id="btn-mobile-admin"
+        style="margin-top: 0.25rem; display: none;">
+        <i class="fa-solid fa-lock"></i> <span data-i18n="adminPortal">Admin Portal</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =======================================================================
+         Hero Section
+         ======================================================================= -->
+    <section id="hero" class="hero">
+      <div class="container hero-grid">
+
+        <!-- Avatar Container -->
+        <div class="hero-avatar-container">
+          <div class="hero-avatar-frame">
+            <img src="https://lh3.googleusercontent.com/d/1Jen7Dyb-DcCdHge8RQVyr436Np-zMkZt"
+              alt="Mohammed Abdeldjebar Moulay Lekbir" id="hero-avatar-img" class="hero-avatar-img">
+          </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+          <div class="hero-status-badge">
+            <span class="badge-dot"></span>
+            <span data-i18n="heroStartupBadge">Founder of Iotrixa &bull; Arrêté 1275 Startup</span>
+          </div>
+
+          <h1 class="hero-name" id="hero-name">Mohammed Abdeldjebar Moulay Lekbir</h1>
+
+          <div class="hero-subtitle" id="hero-subtitle">
+            Electrotechnics &amp; Embedded Systems Engineer &bull; KiCad PCB Designer
+          </div>
+
+          <p class="hero-bio" id="hero-bio">
+            Founder of <strong>Iotrixa</strong> (Arrêté 1275 startup). Specialized in custom PCB schematic and layout
+            design in <strong>KiCad</strong>, embedded firmware on STM32 &amp; ESP32 with FreeRTOS, and motor control
+            systems for competitive robotics.
+          </p>
+
+          <!-- Engineering Metrics Strip -->
+          <div class="hero-metrics-strip">
+            <div class="metric-item">
+              <span class="metric-value">Arrêté 1275</span>
+              <span class="metric-label" data-i18n="metric1Label">Startup Label</span>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-item">
+              <span class="metric-value">KiCad Hardware</span>
+              <span class="metric-label" data-i18n="metric2Label">PCB Layout &amp; Bring-Up</span>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-item">
+              <span class="metric-value">Arduino / ESP32</span>
+              <span class="metric-label" data-i18n="metric3Label">Embedded Firmware</span>
+            </div>
+          </div>
+
+          <div class="hero-cta-group">
+            <a href="#projects" class="btn btn-primary" id="cta-explore-projects">
+              <span data-i18n="ctaExploreProjects">View Projects</span> <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <button onclick="openResumeModal()" class="btn btn-secondary" id="cta-download-cv">
+              <i class="fa-solid fa-file-pdf"></i> <span data-i18n="ctaViewResume">View Resume</span>
+            </button>
+            <a href="#contact" class="btn btn-outline" id="cta-contact" data-i18n="ctaContact">
+              Get in Touch
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Featured Projects
+         ======================================================================= -->
+    <section id="projects" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-eyebrow"><i class="fa-solid fa-microchip"></i> <span data-i18n="projectsEyebrow">Selected
+              Hardware &amp; Firmware</span></div>
+          <h2 class="section-title" data-i18n="projectsTitle">Featured Projects</h2>
+          <p class="section-subtitle" data-i18n="projectsSubtitle">
+            Custom KiCad PCB designs, industrial IoT telemetry hardware, and robotics motor drives. Explore interactive
+            architecture specs, circuit topology, and board photography.
+          </p>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+          <!-- Injected dynamically via JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Technical Skills & Tools
+         ======================================================================= -->
+    <section id="skills" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-eyebrow"><i class="fa-solid fa-sliders"></i> <span data-i18n="skillsEyebrow">Technical
+              Stack</span></div>
+          <h2 class="section-title" data-i18n="skillsTitle">Core Engineering &amp; Tools</h2>
+          <p class="section-subtitle" data-i18n="skillsSubtitle">
+            Mastery across KiCad hardware routing, microcontroller firmware architectures, and industrial telemetry.
+          </p>
+        </div>
+
+        <div class="skills-grid" id="skills-grid">
+          <!-- Injected dynamically via JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Milestones & Credentials
+         ======================================================================= -->
+    <section id="milestones" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-eyebrow"><i class="fa-solid fa-timeline"></i> <span
+              data-i18n="milestonesEyebrow">Trajectory</span></div>
+          <h2 class="section-title" data-i18n="milestonesTitle">Milestones &amp; Credentials</h2>
+          <p class="section-subtitle" data-i18n="milestonesSubtitle">
+            Startup labelization, academic degree in electrotechnics, and competitive robotics championships.
+          </p>
+        </div>
+
+        <div class="milestones-list" id="milestones-list">
+          <!-- Injected dynamically via JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       Footer & Contact
+       ========================================================================= -->
+  <footer id="contact" class="footer">
+    <div class="container footer-content">
+
+      <div class="section-eyebrow" style="justify-content: center;"><i class="fa-solid fa-paper-plane"></i> <span
+          data-i18n="contactEyebrow">Collaboration</span></div>
+      <h2 class="section-title" data-i18n="contactTitle">Let's Build Something Together</h2>
+      <p class="section-subtitle" data-i18n="contactSubtitle">
+        Have a custom KiCad layout requirement, industrial telemetry project, or embedded firmware collaboration in
+        mind?
+      </p>
+
+      <!-- Clean Centered Contact Cards Grid (Rendered dynamically) -->
+      <div class="contact-cards-grid" id="contact-cards-grid">
+        <!-- Injected dynamically via renderContactCards() -->
+      </div>
+
+      <div class="footer-actions">
+        <button onclick="copyEmailToClipboard()" class="btn btn-secondary btn-sm" id="btn-copy-email">
+          <i class="fa-solid fa-copy"></i> <span data-i18n="btnCopyEmail">Copy Email</span>
+        </button>
+        <button onclick="openResumeModal()" class="btn btn-secondary btn-sm" id="btn-footer-resume">
+          <i class="fa-solid fa-file-pdf"></i> <span data-i18n="ctaViewResume">View Resume</span>
+        </button>
+      </div>
+
+      <div class="footer-bottom">
+        <div id="footer-copyright-text" onclick="handleSecretAdminTrigger()" style="cursor: default;"
+          data-i18n="footerCopy">&copy; 2026 Mohammed Abdeldjebar Moulay Lekbir &bull; Founder of Iotrixa</div>
+        <div class="footer-meta-links">
+          <span data-i18n="footerTags">KiCad Hardware &bull; Embedded Systems &bull; High-Precision Engineering</span>
+          <span class="footer-dot-sep" style="display: none;">&bull;</span>
+          <a href="javascript:void(0)" onclick="toggleAdminAuth()" class="admin-portal-link" id="link-admin-footer"
+            style="display: none;">
+            <i class="fa-solid fa-shield-halved"></i> <span data-i18n="adminPortal">Admin Portal</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       Project Specifications Modal
+       ========================================================================= -->
+  <div id="project-modal" class="modal-overlay" onclick="closeProjectModal()">
+    <div class="modal-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="modal-title">
+
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-title" class="modal-title" data-i18n="modalDetails">Project Details</h3>
+          <span id="modal-category" class="modal-category-chip">
+            <i class="fa-solid fa-microchip"></i> Hardware Specifications
+          </span>
+        </div>
+        <button onclick="closeProjectModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Main Preview Image -->
+        <div class="modal-main-img-box">
+          <img id="modal-project-img" src="" alt="Project Preview">
+        </div>
+
+        <!-- Description -->
+        <div class="modal-section-group">
+          <h4 class="modal-section-heading">
+            <i class="fa-solid fa-file-code"></i> <span data-i18n="modalOverview">Engineering Overview</span>
+          </h4>
+          <p id="modal-desc" class="modal-desc-text">
+            Description...
+          </p>
+        </div>
+
+        <!-- Specifications Table -->
+        <div class="modal-section-group">
+          <h4 class="modal-section-heading">
+            <i class="fa-solid fa-list-check"></i> <span data-i18n="modalSpecsHeader">Hardware Specifications</span>
+          </h4>
+          <table class="specs-table" id="modal-specs-table"></table>
+        </div>
+
+        <!-- Components Used -->
+        <div class="modal-section-group">
+          <h4 class="modal-section-heading">
+            <i class="fa-solid fa-microchip"></i> <span data-i18n="modalBom">Components &amp; Bill of Materials</span>
+          </h4>
+          <div id="modal-components-list" class="modal-components-wrap"></div>
+        </div>
+
+        <!-- Firmware & Source Code Section -->
+        <div class="modal-section-group" id="modal-code-section" style="display: none;">
+          <h4 class="modal-section-heading">
+            <i class="fa-solid fa-code"></i> <span data-i18n="modalCodeHeader">Firmware &amp; Source Code</span>
+          </h4>
+          <div class="modal-code-card">
+            <div class="modal-code-header">
+              <div class="modal-code-info">
+                <span class="code-mac-dots" aria-hidden="true">
+                  <span class="mac-dot red"></span>
+                  <span class="mac-dot yellow"></span>
+                  <span class="mac-dot green"></span>
+                </span>
+                <span class="modal-code-filename" id="modal-code-filename">firmware.c</span>
+                <span class="modal-code-badge" id="modal-code-badge">C / C++</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-xs" onclick="copyProjectCode(this)" id="modal-code-copy-btn">
+                <i class="fa-regular fa-copy"></i> <span class="copy-text" data-i18n="copyCode">Copy Code</span>
+              </button>
+            </div>
+            <pre class="modal-code-pre"><code id="modal-code-content" class="modal-code-content"></code></pre>
+          </div>
+        </div>
+
+        <!-- Gallery Photos -->
+        <div class="modal-section-group">
+          <h4 class="modal-section-heading">
+            <i class="fa-solid fa-images"></i> <span data-i18n="modalGallery">PCB &amp; Assembly Gallery</span>
+          </h4>
+          <div class="modal-gallery-grid" id="modal-gallery-grid"></div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button onclick="closeProjectModal()" class="btn btn-secondary btn-sm" data-i18n="modalClose">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Fullscreen Lightbox -->
+  <div id="lightbox-overlay" class="lightbox-overlay" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close Lightbox">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <button class="lightbox-nav-btn lightbox-prev" onclick="prevLightboxImage(event)" aria-label="Previous">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <div class="lightbox-img-wrapper" onclick="event.stopPropagation()">
+      <img id="lightbox-img" class="lightbox-img" src="" alt="Preview">
+    </div>
+    <button class="lightbox-nav-btn lightbox-next" onclick="nextLightboxImage(event)" aria-label="Next">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Resume Modal (Pre-Uploaded PDF Viewer) -->
+  <div id="resume-modal" class="modal-overlay" onclick="closeResumeModal()">
+    <div class="modal-dialog resume-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="resume-modal-title">
+
+      <div class="modal-header">
+        <div>
+          <h3 id="resume-modal-title" class="modal-title" data-i18n="resumeTitle">Curriculum Vitae</h3>
+          <span class="modal-category-chip">
+            <i class="fa-solid fa-file-pdf"></i> <span data-i18n="resumeSub">Pre-Uploaded PDF Resume</span>
+          </span>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <a id="resume-download-btn-top" href="resume.pdf" download="Mohammed_Moulay_Lekbir_Resume.pdf"
+            class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-download"></i> <span data-i18n="resumeDownload">Download PDF</span>
+          </a>
+          <a id="resume-newtab-btn-top" href="resume.pdf" target="_blank" rel="noopener noreferrer"
+            class="btn btn-outline btn-sm">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="resumeOpenNewTab">Open in New
+              Tab</span>
+          </a>
+          <button onclick="closeResumeModal()" class="modal-close-btn" aria-label="Close modal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body resume-modal-body" id="resume-content"></div>
+
+      <div class="modal-footer"
+        style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div class="resume-modal-hint"
+          style="color: var(--text-muted); font-size: 0.8rem; font-family: var(--font-mono); display: flex; align-items: center; gap: 0.4rem;">
+          <i class="fa-solid fa-circle-check" style="color: var(--accent-primary);"></i> Official Verified Document
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <a id="resume-download-btn-bottom" href="resume.pdf" download="Mohammed_Moulay_Lekbir_Resume.pdf"
+            class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-download"></i> <span data-i18n="resumeDownload">Download PDF</span>
+          </a>
+          <button onclick="closeResumeModal()" class="btn btn-secondary btn-sm" data-i18n="modalClose">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Admin Authentication Modal
+       ========================================================================= -->
+  <div id="admin-login-modal" class="modal-overlay" onclick="closeAdminAuthModal()">
+    <div class="modal-dialog admin-auth-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="admin-auth-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="admin-auth-title" class="modal-title"><i class="fa-solid fa-shield-halved"
+              style="color: var(--accent-primary);"></i> Admin Authentication</h3>
+          <span class="modal-category-chip">Full Access &amp; Content Modulation</span>
+        </div>
+        <button onclick="closeAdminAuthModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="admin-form">
+        <div class="modal-body">
+          <div id="admin-login-alert" class="admin-alert admin-alert-danger" style="display: none;"></div>
+          <div class="admin-form-group">
+            <label class="admin-label" for="admin-email-input"><i class="fa-solid fa-envelope"></i> Authorized
+              Email</label>
+            <input type="email" id="admin-email-input" class="admin-input" value="aedmoulay05@gmail.com" required
+              placeholder="aedmoulay05@gmail.com" autocomplete="username">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label" for="admin-password-input"><i class="fa-solid fa-key"></i> Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="admin-password-input" class="admin-input" required
+                placeholder="Enter admin password" autocomplete="current-password">
+              <button type="button" onclick="togglePasswordVisibility('admin-password-input', this)"
+                class="password-toggle-btn" aria-label="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <span class="admin-input-hint">Default password: <code class="code-tag">admin123</code> (customizable in
+              Security settings)</span>
+          </div>
+        </div>
+        <div class="modal-footer" style="gap: 0.75rem;">
+          <button type="button" onclick="closeAdminAuthModal()" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-unlock"></i> Enter Admin
+            Mode</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Admin Control Panel Modal (Full Modulation Dashboard)
+       ========================================================================= -->
+  <div id="admin-panel-modal" class="modal-overlay" onclick="closeAdminControlPanel()">
+    <div class="modal-dialog admin-panel-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="admin-panel-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="admin-panel-title" class="modal-title"><i class="fa-solid fa-sliders"
+              style="color: var(--accent-primary);"></i> Portfolio Modulation Hub</h3>
+          <span class="modal-category-chip">Live Profile, Projects, Skills &amp; Credentials Engine</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button onclick="exportDataJson()" class="btn btn-outline btn-sm" title="Download updated data.json">
+            <i class="fa-solid fa-download"></i> Export JSON
+          </button>
+          <button onclick="closeAdminControlPanel()" class="modal-close-btn" aria-label="Close modal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs-bar">
+        <button class="admin-tab-btn active" id="tab-btn-profile" onclick="switchAdminTab('profile')"><i
+            class="fa-solid fa-user"></i> Profile</button>
+        <button class="admin-tab-btn" id="tab-btn-projects" onclick="switchAdminTab('projects')"><i
+            class="fa-solid fa-microchip"></i> Projects (<span id="tab-count-projects">0</span>)</button>
+        <button class="admin-tab-btn" id="tab-btn-skills" onclick="switchAdminTab('skills')"><i
+            class="fa-solid fa-code"></i> Skills</button>
+        <button class="admin-tab-btn" id="tab-btn-milestones" onclick="switchAdminTab('milestones')"><i
+            class="fa-solid fa-timeline"></i> Milestones (<span id="tab-count-milestones">0</span>)</button>
+        <button class="admin-tab-btn" id="tab-btn-resume" onclick="switchAdminTab('resume')"><i
+            class="fa-solid fa-file-lines"></i> Resume / CV</button>
+        <button class="admin-tab-btn" id="tab-btn-security" onclick="switchAdminTab('security')"><i
+            class="fa-solid fa-database"></i> Backup &amp; Security</button>
+      </div>
+
+      <div class="modal-body admin-panel-body">
+
+        <!-- TAB 1: Profile / Personal Info -->
+        <div id="admin-tab-profile" class="admin-tab-content active">
+          <form id="admin-profile-form" onsubmit="saveProfileForm(event)" class="admin-tab-form">
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label">Full Name</label>
+                <input type="text" id="admin-input-name" class="admin-input" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">Location / Country</label>
+                <input type="text" id="admin-input-location" class="admin-input" required>
+              </div>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label">Primary Title</label>
+                <input type="text" id="admin-input-title" class="admin-input" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">Subtitle (Hero Subheader)</label>
+                <input type="text" id="admin-input-subtitle" class="admin-input" required>
+              </div>
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-label">Bio (Markdown &amp; HTML supported)</label>
+              <textarea id="admin-input-bio" class="admin-textarea" rows="3" required></textarea>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label">Avatar Image URL</label>
+                <input type="url" id="admin-input-avatar" class="admin-input" oninput="previewAvatarUrl(this.value)"
+                  required>
+              </div>
+              <div class="admin-avatar-preview-box">
+                <img id="admin-avatar-preview" src="" alt="Preview">
+              </div>
+            </div>
+
+            <!-- Contact & Social Profiles -->
+            <div style="margin: 1.25rem 0 0.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+              <h5 class="admin-label" style="font-size: 0.85rem; color: var(--accent-primary);"><i
+                  class="fa-solid fa-share-nodes"></i> Channels &amp; Social Links</h5>
+              <p class="admin-input-hint" style="margin-bottom: 0.85rem;">Channels configured here are automatically
+                centered and showcased in your Contact section.</p>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-solid fa-envelope"></i> Direct Email</label>
+                <input type="email" id="admin-input-email" class="admin-input" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-linkedin" style="color: #0a66c2;"></i> LinkedIn
+                  URL</label>
+                <input type="url" id="admin-input-linkedin" class="admin-input"
+                  placeholder="https://linkedin.com/in/username">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-github"></i> GitHub URL</label>
+                <input type="url" id="admin-input-github" class="admin-input" placeholder="https://github.com/username">
+              </div>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram
+                  URL</label>
+                <input type="url" id="admin-input-instagram" class="admin-input"
+                  placeholder="https://instagram.com/username">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Facebook
+                  URL</label>
+                <input type="url" id="admin-input-facebook" class="admin-input"
+                  placeholder="https://facebook.com/username">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-x-twitter"></i> Twitter / X URL</label>
+                <input type="url" id="admin-input-twitter" class="admin-input" placeholder="https://x.com/username">
+              </div>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-youtube" style="color: #ff0000;"></i> YouTube Channel
+                  URL</label>
+                <input type="url" id="admin-input-youtube" class="admin-input"
+                  placeholder="https://youtube.com/@channel">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> WhatsApp /
+                  Phone</label>
+                <input type="text" id="admin-input-whatsapp" class="admin-input"
+                  placeholder="+213xxxxxxxxx or WhatsApp link">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label"><i class="fa-brands fa-telegram" style="color: #24A1DE;"></i> Telegram
+                  URL</label>
+                <input type="url" id="admin-input-telegram" class="admin-input" placeholder="https://t.me/username">
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save Profile
+                Details</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB 2: Projects Management -->
+        <div id="admin-tab-projects" class="admin-tab-content">
+          <div class="admin-tab-header">
+            <div>
+              <h4 class="admin-tab-heading">Hardware &amp; Firmware Projects</h4>
+              <p class="admin-tab-sub">Add, modify, reorder or remove portfolio projects.</p>
+            </div>
+            <button onclick="openProjectEditModal()" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-plus"></i> Add New Project
+            </button>
+          </div>
+          <div id="admin-projects-list" class="admin-list-container">
+            <!-- Dynamic project management items -->
+          </div>
+        </div>
+
+        <!-- TAB 3: Skills & Domains -->
+        <div id="admin-tab-skills" class="admin-tab-content">
+          <div class="admin-tab-header">
+            <div>
+              <h4 class="admin-tab-heading">Technical Domains &amp; Skills</h4>
+              <p class="admin-tab-sub">Configure skill categories, competencies and toolchains.</p>
+            </div>
+            <button onclick="addNewSkillCategory()" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-plus"></i> Add Domain Category
+            </button>
+          </div>
+          <div id="admin-skills-list" class="admin-list-container">
+            <!-- Dynamic skills categories -->
+          </div>
+        </div>
+
+        <!-- TAB 4: Milestones -->
+        <div id="admin-tab-milestones" class="admin-tab-content">
+          <div class="admin-tab-header">
+            <div>
+              <h4 class="admin-tab-heading">Milestones &amp; Credentials</h4>
+              <p class="admin-tab-sub">Timeline achievements, startup labelization, and championships.</p>
+            </div>
+            <button onclick="openMilestoneEditModal()" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-plus"></i> Add Milestone
+            </button>
+          </div>
+          <div class="admin-auto-saved-hint" style="margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-arrows-up-down-left-right" style="color: var(--accent-amber);"></i>
+            <span>Drag &amp; drop items or use arrows to change milestones positions.</span>
+          </div>
+          <div id="admin-milestones-list" class="admin-list-container">
+            <!-- Dynamic milestones items -->
+          </div>
+        </div>
+
+        <!-- TAB 5: Resume (CV) -->
+        <div id="admin-tab-resume" class="admin-tab-content">
+          <div class="admin-section-block">
+            <div class="admin-tab-header">
+              <div>
+                <h4 class="admin-tab-heading"><i class="fa-solid fa-file-pdf" style="color: var(--accent-primary);"></i>
+                  Pre-Uploaded PDF Resume</h4>
+                <p class="admin-tab-sub">Manage your official pre-uploaded PDF curriculum vitae.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" onclick="testOpenCurrentPdf()" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Current PDF
+                </button>
+                <button type="button" onclick="downloadCurrentPdf()" class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-download"></i> Download PDF
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Status Card -->
+            <div class="admin-pdf-status-card"
+              style="margin-top: 1rem; padding: 1rem; background: var(--bg-surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.85rem;">
+                <div
+                  style="width: 42px; height: 42px; border-radius: var(--radius-xs); background: #ef44441f; border: 1px solid #ef44444d; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #fff; font-size: 0.925rem;" id="admin-pdf-active-name">resume.pdf
+                  </div>
+                  <div style="font-size: 0.775rem; color: var(--accent-primary); font-family: var(--font-mono);"
+                    id="admin-pdf-active-status">Active &bull; Verified PDF Document</div>
+                </div>
+              </div>
+              <div id="admin-pdf-custom-badge" style="display: none;">
+                <button onclick="resetResumePdfToDefault()" class="btn btn-outline btn-sm"
+                  style="font-size: 0.775rem; color: var(--accent-amber); border-color: var(--accent-amber);">
+                  <i class="fa-solid fa-rotate-left"></i> Revert to default resume.pdf
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload New PDF Section -->
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 0.35rem;"><i
+                  class="fa-solid fa-cloud-arrow-up"></i> Upload / Replace PDF</h5>
+              <p class="admin-tab-sub" style="margin-bottom: 0.85rem;">Upload a new PDF file from your computer to
+                immediately update the resume across the site.</p>
+
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="admin-resume-file-input" accept="application/pdf" style="display: none;"
+                  onchange="handleAdminPdfUpload(event)">
+                <button type="button" onclick="document.getElementById('admin-resume-file-input').click()"
+                  class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-file-arrow-up"></i> Choose PDF From Computer
+                </button>
+                <span id="admin-pdf-upload-hint"
+                  style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">Accepts .pdf
+                  files</span>
+              </div>
+            </div>
+
+            <!-- Or Specify Custom URL -->
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 0.35rem;"><i class="fa-solid fa-link"></i> Or
+                Enter Cloud / Hosted PDF URL</h5>
+              <p class="admin-tab-sub" style="margin-bottom: 0.65rem;">If your resume is hosted on Google Drive, GitHub
+                Releases, Cloudinary, or Vercel:</p>
+              <div style="display: flex; gap: 0.5rem; max-width: 540px;">
+                <input type="url" id="admin-resume-url-input" class="admin-input"
+                  placeholder="https://example.com/my-resume.pdf" value="resume.pdf">
+                <button type="button" onclick="saveAdminPdfUrl()" class="btn btn-secondary btn-sm"
+                  style="flex-shrink: 0;">
+                  <i class="fa-solid fa-floppy-disk"></i> Save URL
+                </button>
+              </div>
+            </div>
+
+            <!-- Permanent Deployment Tip -->
+            <div
+              style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-surface); border-left: 3px solid var(--accent-primary); border-radius: var(--radius-xs);">
+              <div style="font-size: 0.825rem; font-weight: 700; color: var(--accent-primary); margin-bottom: 0.25rem;">
+                <i class="fa-solid fa-lightbulb"></i> Permanent Deployment File
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+                To make your PDF permanent across all devices and builds without browser storage, simply put your PDF
+                file as <code class="code-tag">public/resume.pdf</code> (or <code class="code-tag">resume.pdf</code>) in
+                your project workspace. It will automatically be bundled into your production build.
+              </p>
+            </div>
+
+            <!-- Live Preview -->
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <h5 style="color: #fff; font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fa-solid fa-eye"></i> Live
+                PDF Preview</h5>
+              <div
+                style="height: 380px; border-radius: var(--radius-sm); border: 1px solid var(--border-medium); overflow: hidden; background: #1c1c1c;">
+                <iframe id="admin-resume-preview-frame" src="resume.pdf"
+                  style="width: 100%; height: 100%; border: none;" title="Admin Resume Preview"></iframe>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 6: Backup & Security -->
+        <div id="admin-tab-security" class="admin-tab-content">
+          <div class="admin-section-block">
+            <h4 class="admin-tab-heading"><i class="fa-solid fa-lock"></i> Change Admin Password</h4>
+            <p class="admin-tab-sub">Update the password required to access this admin panel.</p>
+            <form onsubmit="handlePasswordChange(event)" style="margin-top: 0.75rem; max-width: 480px;">
+              <div class="admin-form-group">
+                <label class="admin-label">Current Password</label>
+                <input type="password" id="admin-curr-pass" class="admin-input" required
+                  placeholder="Enter current password">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-label">New Password</label>
+                <input type="password" id="admin-new-pass" class="admin-input" required
+                  placeholder="Enter new password (min 6 characters)">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-key"></i> Update
+                Password</button>
+            </form>
+          </div>
+
+          <div class="admin-section-block" style="margin-top: 1.75rem;">
+            <h4 class="admin-tab-heading"><i class="fa-solid fa-file-export"></i> Permanent Export &amp; Backup</h4>
+            <p class="admin-tab-sub">Download your updated dataset as <code>data.json</code> to commit to GitHub or
+              upload to Vercel/Netlify.</p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem;">
+              <button onclick="exportDataJson()" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-download"></i> Download data.json
+              </button>
+              <button onclick="copyDataJson()" class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-copy"></i> Copy JSON to Clipboard
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-section-block" style="margin-top: 1.75rem;">
+            <h4 class="admin-tab-heading"><i class="fa-solid fa-file-import"></i> Import Custom Dataset</h4>
+            <p class="admin-tab-sub">Load a <code>data.json</code> file or paste JSON to override all current portfolio
+              data.</p>
+            <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <input type="file" id="admin-json-file-input" accept=".json" onchange="importDataJsonFile(event)"
+                class="admin-file-input">
+              <button onclick="openJsonPasteModal()" class="btn btn-outline btn-sm" style="align-self: flex-start;">
+                <i class="fa-solid fa-code"></i> Paste Raw JSON
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-section-block" style="margin-top: 1.75rem; border-color: rgba(239, 68, 68, 0.3);">
+            <h4 class="admin-tab-heading" style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i>
+              Danger Zone</h4>
+            <p class="admin-tab-sub">Reset all modifications and restore the original initial data.</p>
+            <div style="margin-top: 0.75rem;">
+              <button onclick="resetToDefaultData()" class="btn btn-danger btn-sm">
+                <i class="fa-solid fa-rotate-left"></i> Reset to Factory Default Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <span class="admin-auto-saved-hint"><i class="fa-solid fa-circle-check"
+            style="color: var(--accent-primary);"></i> Changes auto-saved to browser storage &bull; Click "Export JSON"
+          to save file</span>
+        <button onclick="closeAdminControlPanel()" class="btn btn-secondary btn-sm">Close Hub</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Project Editor Modal (Create / Edit Project)
+       ========================================================================= -->
+  <div id="project-editor-modal" class="modal-overlay" onclick="closeProjectEditModal()">
+    <div class="modal-dialog admin-edit-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="project-editor-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="project-editor-title" class="modal-title">Edit Project</h3>
+          <span class="modal-category-chip">Schematic, Firmware &amp; Hardware Specs</span>
+        </div>
+        <button onclick="closeProjectEditModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="project-editor-form" onsubmit="handleSaveProject(event)">
+        <input type="hidden" id="edit-project-original-id">
+        <div class="modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label">Project Title</label>
+              <input type="text" id="edit-project-title" class="admin-input" required
+                placeholder="e.g. Iotrixa Smart Hardware">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Category</label>
+              <input type="text" id="edit-project-category" class="admin-input" required
+                placeholder="e.g. IoT & Telemetry, Custom PCB">
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label">Short Summary (Card Preview)</label>
+            <input type="text" id="edit-project-short-desc" class="admin-input" required
+              placeholder="Brief 1-line engineering summary">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label">Full Technical Description &amp; Highlights</label>
+            <textarea id="edit-project-full-desc" class="admin-textarea" rows="4" required
+              placeholder="Detailed architecture description..."></textarea>
+          </div>
+
+          <!-- Primary Cover Picture with Upload & URL -->
+          <div class="admin-section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+              <label class="admin-label" style="margin: 0;">
+                <i class="fa-solid fa-image"></i> Primary Cover Picture
+              </label>
+              <div style="display: flex; gap: 0.4rem; align-items: center;">
+                <label class="btn btn-primary btn-sm image-upload-btn" style="cursor: pointer; padding: 0.25rem 0.65rem; font-size: 0.775rem; display: inline-flex; align-items: center; gap: 0.4rem; margin: 0;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Picture
+                  <input type="file" id="edit-project-img-file" accept="image/*" style="display: none;" onchange="handleProjectImageUpload(event)">
+                </label>
+                <button type="button" class="btn btn-outline btn-sm admin-btn-danger-outline" onclick="clearProjectImage()" style="padding: 0.25rem 0.55rem; font-size: 0.775rem;" title="Clear image">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-image-upload-wrapper">
+              <div class="admin-image-dropzone" id="edit-project-dropzone" onclick="document.getElementById('edit-project-img-file').click()" title="Click to upload image or drag & drop file">
+                <div class="project-cover-preview-box">
+                  <img id="edit-project-img-preview" src="" alt="Cover Preview" style="display: none;">
+                  <div class="dropzone-empty-hint" id="edit-project-drop-hint">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Click or drag image file here</span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 0.4rem; min-width: 200px;">
+                <input type="text" id="edit-project-image" class="admin-input" required placeholder="Or paste image URL (https://...)" oninput="previewProjectImg(this.value)">
+                <span class="admin-input-hint"><i class="fa-solid fa-circle-info"></i> JPG, PNG, WebP or SVG. Local uploads are auto-compressed for fast loading & local storage.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Specs Editor -->
+          <div class="admin-section-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label class="admin-label" style="margin: 0;"><i class="fa-solid fa-list-check"></i> Hardware
+                Specifications (Key - Value)</label>
+              <button type="button" onclick="addSpecRow()" class="btn btn-outline btn-sm"
+                style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">
+                <i class="fa-solid fa-plus"></i> Add Spec Row
+              </button>
+            </div>
+            <div id="edit-project-specs-container" class="admin-specs-builder"></div>
+          </div>
+
+          <!-- Components BOM -->
+          <div class="admin-form-group" style="margin-top: 1rem;">
+            <label class="admin-label"><i class="fa-solid fa-microchip"></i> Components / Bill of Materials (Comma
+              separated)</label>
+            <input type="text" id="edit-project-components" class="admin-input"
+              placeholder="e.g. ESP32-C3, KiCad PCB, 5V Relay, HLK-PM01">
+          </div>
+
+          <!-- Source Code & Firmware Editor (Paste or Upload) -->
+          <div class="admin-section-block" style="margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <label class="admin-label" style="margin: 0;"><i class="fa-solid fa-code"></i> Firmware &amp; Source Code / Script</label>
+                <span style="font-size: 0.725rem; color: var(--text-muted); font-family: var(--font-mono);">Paste snippet or upload code file (.c, .cpp, .ino, .py, .kicad, .txt)</span>
+              </div>
+              <div style="display: flex; gap: 0.4rem; align-items: center;">
+                <label class="btn btn-outline btn-sm" style="cursor: pointer; padding: 0.2rem 0.6rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem; margin: 0;">
+                  <i class="fa-solid fa-file-arrow-up"></i> Upload Code File
+                  <input type="file" id="edit-project-code-file" accept=".c,.cpp,.h,.hpp,.ino,.py,.js,.ts,.json,.txt,.v,.sv,.asm,.s,.rs,.sh,.kicad_pcb,.kicad_sch,.kicad_pro,.kicad_sym" style="display: none;" onchange="handleProjectCodeFileUpload(event)">
+                </label>
+                <button type="button" class="btn btn-outline btn-sm admin-btn-danger-outline" onclick="clearProjectCode()" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">
+                  <i class="fa-solid fa-trash-can"></i> Clear
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-form-row" style="margin-bottom: 0.65rem;">
+              <div class="admin-form-group" style="margin-bottom: 0;">
+                <label class="admin-label">Filename / Title</label>
+                <input type="text" id="edit-project-code-filename" class="admin-input" placeholder="e.g. telemetry_task.c, pid_controller.cpp, main.py">
+              </div>
+              <div class="admin-form-group" style="margin-bottom: 0;">
+                <label class="admin-label">Language / Format</label>
+                <select id="edit-project-code-lang" class="admin-input">
+                  <option value="c">C / C++ (Embedded Firmware)</option>
+                  <option value="arduino">Arduino / PlatformIO</option>
+                  <option value="python">Python / MicroPython</option>
+                  <option value="rust">Rust (Embedded)</option>
+                  <option value="verilog">Verilog / VHDL (FPGA)</option>
+                  <option value="bash">Bash / Shell Script</option>
+                  <option value="json">JSON / Config Data</option>
+                  <option value="kicad">KiCad Hardware Netlist / Spec</option>
+                  <option value="plaintext">Plain Text / Documentation</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-code-editor-box">
+              <div class="admin-code-editor-header">
+                <span class="code-editor-tab"><i class="fa-solid fa-file-code"></i> Code Editor</span>
+                <span id="edit-project-code-stats" class="admin-code-stats">0 lines</span>
+              </div>
+              <textarea id="edit-project-code-text" class="admin-textarea admin-code-textarea" rows="7"
+                placeholder="// Paste firmware, embedded driver, or hardware code here...&#10;// Or click 'Upload Code File' above or drag &amp; drop a text file here."
+                spellcheck="false" oninput="updateCodeStats()"></textarea>
+            </div>
+          </div>
+
+          <!-- Gallery Photos -->
+          <div class="admin-section-block" style="margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+              <label class="admin-label" style="margin: 0;"><i class="fa-solid fa-images"></i> PCB &amp; Assembly
+                Gallery Photos</label>
+              <div style="display: flex; gap: 0.4rem;">
+                <label class="btn btn-primary btn-sm" style="cursor: pointer; padding: 0.2rem 0.6rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem; margin: 0;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photos
+                  <input type="file" id="edit-project-gallery-file" accept="image/*" multiple style="display: none;" onchange="handleGalleryImagesUpload(event)">
+                </label>
+                <button type="button" onclick="addGalleryPhotoRow()" class="btn btn-outline btn-sm"
+                  style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">
+                  <i class="fa-solid fa-plus"></i> Add URL
+                </button>
+              </div>
+            </div>
+            <div id="edit-project-gallery-container" class="admin-gallery-builder"></div>
+          </div>
+
+        </div>
+        <div class="modal-footer" style="gap: 0.75rem;">
+          <button type="button" onclick="closeProjectEditModal()" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save
+            Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Milestone Editor Modal
+       ========================================================================= -->
+  <div id="milestone-editor-modal" class="modal-overlay" onclick="closeMilestoneEditModal()">
+    <div class="modal-dialog admin-auth-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="milestone-editor-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="milestone-editor-title" class="modal-title">Edit Milestone</h3>
+          <span class="modal-category-chip">Career &amp; Engineering Trajectory</span>
+        </div>
+        <button onclick="closeMilestoneEditModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="milestone-editor-form" onsubmit="handleSaveMilestone(event)">
+        <input type="hidden" id="edit-milestone-index">
+        <div class="modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label">Year / Period</label>
+              <input type="text" id="edit-milestone-year" class="admin-input" required placeholder="e.g. 2024 - 2025">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Issuer / Organization</label>
+              <input type="text" id="edit-milestone-issuer" class="admin-input" required
+                placeholder="e.g. Ministry of Higher Education">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Milestone Title</label>
+            <input type="text" id="edit-milestone-title" class="admin-input" required
+              placeholder="e.g. Arrêté 1275 Startup Innovation Label">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Description</label>
+            <textarea id="edit-milestone-desc" class="admin-textarea" rows="3" required
+              placeholder="Description of achievement..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="gap: 0.75rem;">
+          <button type="button" onclick="closeMilestoneEditModal()" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save
+            Milestone</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Experience Editor Modal
+       ========================================================================= -->
+  <div id="experience-editor-modal" class="modal-overlay" onclick="closeExperienceEditModal()">
+    <div class="modal-dialog admin-auth-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="exp-editor-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="exp-editor-title" class="modal-title">Edit Work Experience</h3>
+          <span class="modal-category-chip">Role &amp; Responsibilities</span>
+        </div>
+        <button onclick="closeExperienceEditModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="experience-editor-form" onsubmit="handleSaveExperience(event)">
+        <input type="hidden" id="edit-exp-index">
+        <div class="modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label">Role / Job Title</label>
+              <input type="text" id="edit-exp-role" class="admin-input" required
+                placeholder="e.g. Founder & Lead Embedded Engineer">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Period</label>
+              <input type="text" id="edit-exp-period" class="admin-input" required placeholder="e.g. 2024 - Present">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Organization / Startup</label>
+            <input type="text" id="edit-exp-org" class="admin-input" required placeholder="e.g. Iotrixa (Arrêté 1275)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Deliverables &amp; Bullet Points (One per line)</label>
+            <textarea id="edit-exp-bullets" class="admin-textarea" rows="4" required
+              placeholder="Designed custom PCBs in KiCad...&#10;Integrated ESP32-C3 telemetry..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="gap: 0.75rem;">
+          <button type="button" onclick="closeExperienceEditModal()" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save
+            Experience</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Education Editor Modal
+       ========================================================================= -->
+  <div id="education-editor-modal" class="modal-overlay" onclick="closeEducationEditModal()">
+    <div class="modal-dialog admin-auth-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="edu-editor-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="edu-editor-title" class="modal-title">Edit Education</h3>
+          <span class="modal-category-chip">Academic Degree</span>
+        </div>
+        <button onclick="closeEducationEditModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="education-editor-form" onsubmit="handleSaveEducation(event)">
+        <input type="hidden" id="edit-edu-index">
+        <div class="modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label">Degree</label>
+              <input type="text" id="edit-edu-degree" class="admin-input" required
+                placeholder="e.g. Master / MCIL Electrotechnics">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Period</label>
+              <input type="text" id="edit-edu-period" class="admin-input" required
+                placeholder="e.g. Specialized Program">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Institution</label>
+            <input type="text" id="edit-edu-inst" class="admin-input" required placeholder="e.g. Faculty of Technology">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Curriculum Details</label>
+            <textarea id="edit-edu-details" class="admin-textarea" rows="3" required
+              placeholder="Power electronics, embedded systems..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="gap: 0.75rem;">
+          <button type="button" onclick="closeEducationEditModal()" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save
+            Education</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Raw JSON Paste Modal
+       ========================================================================= -->
+  <div id="json-paste-modal" class="modal-overlay" onclick="closeJsonPasteModal()">
+    <div class="modal-dialog admin-auth-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true"
+      aria-labelledby="json-paste-title">
+      <div class="modal-header">
+        <div>
+          <h3 id="json-paste-title" class="modal-title">Paste Raw Dataset</h3>
+          <span class="modal-category-chip">JSON Override</span>
+        </div>
+        <button onclick="closeJsonPasteModal()" class="modal-close-btn" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="admin-form-group">
+          <label class="admin-label">Paste complete JSON dataset</label>
+          <textarea id="raw-json-paste-textarea" class="admin-textarea" rows="10"
+            placeholder="{ &quot;personal&quot;: ... }"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="gap: 0.75rem;">
+        <button type="button" onclick="closeJsonPasteModal()" class="btn btn-secondary btn-sm">Cancel</button>
+        <button type="button" onclick="applyPastedJson()" class="btn btn-primary btn-sm"><i
+            class="fa-solid fa-check"></i> Apply JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <script type="module" src="/script.js"></script>
+
+</body>
+
+</html>

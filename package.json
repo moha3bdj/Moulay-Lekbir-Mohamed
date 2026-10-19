@@ -1,0 +1,23 @@
+{
+  "name": "portfolio-mohammed-moulay-lekbir",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio of Mohammed Abdeldjebar Moulay Lekbir - Electrotechnics & Embedded Systems Engineer",
+  "scripts": {
+    "dev": "vite --port 3000 --host",
+    "build": "vite build",
+    "preview": "vite preview --port 3000"
+  },
+  "keywords": [
+    "portfolio",
+    "embedded-systems",
+    "electrotechnics",
+    "iot",
+    "pcb-design"
+  ],
+  "author": "Mohammed Abdeldjebar Moulay Lekbir",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}

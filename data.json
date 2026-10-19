@@ -1,0 +1,209 @@
+{
+  "personal": {
+    "name": "Mohammed Abdeldjebar Moulay Lekbir",
+    "title": "Electrotechnics & Embedded Systems Engineer",
+    "subtitle": "KiCad PCB Designer & Embedded Systems Developer",
+    "avatar": "https://lh3.googleusercontent.com/d/1Jen7Dyb-DcCdHge8RQVyr436Np-zMkZt",
+    "location": "Algeria",
+    "bio": "Founder of Iotrixa (Arrêté 1275 labelized startup). Specialized in KiCad PCB design, embedded systems (STM32 / ESP32), IoT telemetry architectures, and motor drive hardware for competitive robotics.",
+    "email": "aedmoulay05@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/moulay-lekbir-mohammed-abdeldjebar-a3526b307/",
+    "github": "https://github.com/moha3bdj",
+    "instagram": "",
+    "facebook": "",
+    "twitter": "",
+    "youtube": "",
+    "whatsapp": "",
+    "telegram": ""
+  },
+  "projects": [
+    {
+      "id": "iotrixa",
+      "title": "Iotrixa - Smart Control Hardware",
+      "category": "IoT & Telemetry",
+      "shortDesc": "Real-time IoT telemetry system using ESP32, custom power electronics, and cloud synchronization.",
+      "image": "https://lh3.googleusercontent.com/d/1OdZl6rIWL8K_4dGsrjwXaqwh9AJ06ex7",
+      "specs": {
+        "Microcontroller": "ESP32-C3 Supermini RISC-V",
+        "Power Supply": "HLK-PM01 AC-DC Step-Down (5V/3W)",
+        "PCB Design Tool": "KiCad (Custom 1-Layer with Isolated Ground Plane)",
+        "Actuation": "5V Relay Matrix (10A 250VAC)",
+        "Protocols": "MQTT over TLS, WebSocket, Wi-Fi"
+      },
+      "fullDescription": "Iotrixa is an industrial IoT hardware telemetry platform engineered for environmental monitoring and automated relay switching under Arrêté 1275.\n\nKey Highlights:\n• Custom 1-layer PCB designed in KiCad with isolated ground planes and snubber diodes to mitigate EMI.\n• ESP32 executing FreeRTOS tasks for real-time sensor polling and MQTT cloud sync.\n• Step-down buck power conversion with transient surge protection.",
+      "components": [
+        "ESP32-C3 Supermini",
+        "KiCad Custom PCB",
+        "5V Relay (10A 250VAC)",
+        "HLK-PM01 AC-DC",
+        "MQTT Protocol",
+        "Flyback Diode"
+      ],
+      "gallery": [
+        "https://lh3.googleusercontent.com/d/14n4-OrLAlPS-9uSSZP_Kg7XZ7Xjd8oU7",
+        "https://lh3.googleusercontent.com/d/166oudlUfDTs6D-J8QjKwcwpxYJSRzZEV",
+        "https://lh3.googleusercontent.com/d/16zXqYloh13SakZv38CfnPcarGeEWKhrK",
+        "https://lh3.googleusercontent.com/d/19i4NiHQ-_rbfXI-OJQFH0RX6GitDrV6A",
+        "https://lh3.googleusercontent.com/d/1DlffN5W6Gcgpsvox33mrfaRAvBJ4q2eL",
+        "https://lh3.googleusercontent.com/d/1SVecvFFiVd9cvzWnlrDOmWw1dOFz9cA5",
+        "https://lh3.googleusercontent.com/d/1_AR7gBROgjgEg4csMxfkBA85fp-UOkQZ",
+        "https://lh3.googleusercontent.com/d/1a1DCVpvhaxXxcx-1s5C1dP4XuXcPyJ9S",
+        "https://lh3.googleusercontent.com/d/1oIcaaPl_4lj258rPpZEit_5zHTjYnNJX",
+        "https://lh3.googleusercontent.com/d/1tvvcmsO209lTFhpZoh2hUl_a609gSETZ"
+      ],
+      "codeFilename": "telemetry_task.c",
+      "codeLanguage": "c",
+      "code": "/**\n * Iotrixa Smart Hardware - FreeRTOS Telemetry & Actuation Task\n * Target: ESP32-C3 Supermini RISC-V | Framework: ESP-IDF / Arduino\n */\n#include <WiFi.h>\n#include <PubSubClient.h>\n\n#define RELAY_CH1_PIN    4\n#define SENSOR_ADC_PIN   1\n#define STATUS_LED_PIN   8\n\nWiFiClient espClient;\nPubSubClient mqttClient(espClient);\n\nvoid vTelemetryTask(void *pvParameters) {\n  char payload[128];\n  for (;;) {\n    int rawAdc = analogRead(SENSOR_ADC_PIN);\n    float voltage = (rawAdc / 4095.0f) * 3.3f;\n    \n    snprintf(payload, sizeof(payload),\n      \"{\\\"device\\\":\\\"iotrixa-01\\\",\\\"adc\\\":%d,\\\"volt\\\":%.3f,\\\"relay\\\":%d}\",\n      rawAdc, voltage, digitalRead(RELAY_CH1_PIN));\n    \n    if (mqttClient.connected()) {\n      mqttClient.publish(\"iotrixa/telemetry/nodes\", payload);\n    }\n    vTaskDelay(pdMS_TO_TICKS(1000));\n  }\n}"
+    },
+    {
+      "id": "safebelt",
+      "title": "SafeBelt - Motor Controller & Safety Board",
+      "category": "Custom PCB",
+      "shortDesc": "High-density PCB featuring custom power distribution, STM32 control, and sensor interfaces.",
+      "image": "https://lh3.googleusercontent.com/d/1foFDBz4k-Q3PTBsqhG7wjFMqwpDfS2o7",
+      "specs": {
+        "Microcontroller": "STM32F4 ARM Cortex-M4 (168MHz)",
+        "PCB Design Tool": "KiCad (Multi-Layer Layout with Impedance Control)",
+        "Signal Isolation": "High-Speed Optocouplers (PC817/6N137)",
+        "Bus Interface": "RS-485 Differential Transceiver",
+        "Protection": "Hardware Overcurrent Comparator + Crowbar"
+      },
+      "fullDescription": "Engineered and fabricated for high-reliability embedded motor control and safety applications.\n\nKey Highlights:\n• Sub-microsecond hardware overcurrent shutoff circuit.\n• Opto-isolated signal paths shielding the STM32 microcontroller from motor switching noise.\n• High-speed differential RS485 communication.\n• Designed and routed entirely in KiCad.",
+      "components": [
+        "KiCad Multi-Layer PCB",
+        "STM32F4 Cortex-M4",
+        "High-Speed Optocouplers",
+        "RS-485 Transceiver",
+        "SMD Passives",
+        "Current Shunt Resistor"
+      ],
+      "gallery": [
+        "https://lh3.googleusercontent.com/d/14HEhjt_xihSt4vu5N8Enrdrhc5Rh9fGO",
+        "https://lh3.googleusercontent.com/d/17kFic_dyWgOSquDR-ay_3A5K07x8m36X",
+        "https://lh3.googleusercontent.com/d/1OhIw71AugEY3UUBSHKYRl6xN34gLg5Ro",
+        "https://lh3.googleusercontent.com/d/1ViA3bChZzh80aOml1yFZcFS6-wjYkT8i",
+        "https://lh3.googleusercontent.com/d/1bC_H7O5qoYa9VDIOnMa1NJamyfXFJH2y",
+        "https://lh3.googleusercontent.com/d/1lrLhL459hESjPR8NMlnHXYMpj6erRv9v"
+      ],
+      "codeFilename": "motor_fault_isr.c",
+      "codeLanguage": "c",
+      "code": "/**\n * SafeBelt High-Reliability Motor Controller\n * Target: STM32F401 ARM Cortex-M4 @ 84MHz\n * Sub-Microsecond Hardware Overcurrent Shutoff ISR\n */\n#include \"stm32f4xx_hal.h\"\n\nextern TIM_HandleTypeDef htim1;\n\nvoid HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {\n  if (GPIO_Pin == OVERCURRENT_COMP_PIN) {\n    // Immediate hardware PWM disable (<450ns response)\n    __HAL_TIM_MOE_DISABLE(&htim1);\n    htim1.Instance->CCR1 = 0;\n    htim1.Instance->CCR2 = 0;\n    \n    // Latch safety crowbar & activate optical fault signal\n    HAL_GPIO_WritePin(FAULT_LATCH_PORT, FAULT_LATCH_PIN, GPIO_PIN_SET);\n    HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_SET);\n    \n    RS485_BroadcastAlert(ALERT_CODE_OVERCURRENT);\n  }\n}"
+    },
+    {
+      "id": "robotics",
+      "title": "Autonomous Navigation Robot",
+      "category": "Robotics & Control",
+      "shortDesc": "Closed-loop motor drive and obstacle avoidance platform built for national robotics competitions.",
+      "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
+      "specs": {
+        "Architecture": "High-Speed Microcontroller with Hardware PWM",
+        "Control Algorithm": "Closed-Loop PID Velocity Control with Optical Encoders",
+        "Perception": "Multi-Zone Ultrasonic Array + IR Proximity",
+        "Power Supply": "4S LiPo Battery Pack (14.8V)",
+        "Firmware": "Embedded C++"
+      },
+      "fullDescription": "Custom autonomous wheeled robot constructed for national robotics competitions.\n\nKey Highlights:\n• Closed-loop PID velocity control using quadrature optical encoders.\n• Real-time ultrasonic ranging matrix calculating obstacle avoidance vectors.\n• High-current MOSFET H-bridge motor drive.",
+      "components": [
+        "PID Motor Driver",
+        "Ultrasonic Array",
+        "Quadrature Encoders",
+        "LiPo 4S Battery",
+        "H-Bridge MOSFETs",
+        "Embedded C++"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&auto=format&fit=crop&q=80"
+      ],
+      "codeFilename": "pid_velocity_controller.cpp",
+      "codeLanguage": "c",
+      "code": "/**\n * Autonomous Navigation Robot - Closed-Loop PID Velocity Controller\n * Quadrature Optical Encoder Feedback\n */\nclass VelocityPID {\nprivate:\n  float kp = 1.25f, ki = 0.08f, kd = 0.03f;\n  float integral = 0.0f, lastError = 0.0f;\n  float outputMin = -255.0f, outputMax = 255.0f;\n\npublic:\n  float compute(float targetRPM, float measuredRPM, float dt) {\n    float error = targetRPM - measuredRPM;\n    integral += error * dt;\n    if (integral > 100.0f) integral = 100.0f;\n    else if (integral < -100.0f) integral = -100.0f;\n    \n    float derivative = (dt > 0.0f) ? (error - lastError) / dt : 0.0f;\n    lastError = error;\n    \n    float output = (kp * error) + (ki * integral) + (kd * derivative);\n    if (output > outputMax) return outputMax;\n    if (output < outputMin) return outputMin;\n    return output;\n  }\n};"
+    }
+  ],
+  "skills": [
+    {
+      "category": "PCB Design & Hardware",
+      "items": [
+        "KiCad Schematic & Layout",
+        "Multi-Layer PCB Routing",
+        "Ground Plane Isolation & EMI Reduction",
+        "AC-DC Buck & Power Topologies",
+        "SMD Soldering & Board Bring-Up"
+      ]
+    },
+    {
+      "category": "Microcontrollers & Firmware",
+      "items": [
+        "STM32 ARM Cortex-M (HAL / LL)",
+        "ESP32 (C3, S3, WROOM)",
+        "Embedded C / C++ & Python",
+        "FreeRTOS Multi-Threading",
+        "PID Motor Control & Encoders"
+      ]
+    },
+    {
+      "category": "IoT & Protocols",
+      "items": [
+        "MQTT over TLS",
+        "RS-485 & Modbus RTU",
+        "I2C, SPI & UART Buses",
+        "Firebase Realtime DB",
+        "Wi-Fi Telemetry & OTA"
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "year": "2024 - 2025",
+      "title": "Arrêté 1275 Startup Innovation Label (Iotrixa)",
+      "issuer": "Ministry of Higher Education & Scientific Research",
+      "description": "Government label recognizing Iotrixa as an innovative technology startup project for IoT telemetry and automated relay control systems."
+    },
+    {
+      "year": "Academic",
+      "title": "MCIL Electrotechnics & Embedded Systems Degree",
+      "issuer": "Faculty of Technology",
+      "description": "Specialized curriculum covering industrial electrotechnics, power distribution, microcontrollers, and closed-loop control systems."
+    },
+    {
+      "year": "2025",
+      "title": "National Robotics Championship Competitor",
+      "issuer": "National Robotics Tournament",
+      "description": "Lead hardware engineer: engineered autonomous wheeled robotic platform with PID velocity control and ultrasonic navigation."
+    }
+  ],
+  "resumeData": {
+    "summary": "Electrotechnics & Embedded Systems Engineer and Founder of Iotrixa (Arrêté 1275). Experienced in KiCad PCB design, power electronics, and real-time firmware development in Embedded C/C++ on STM32 and ESP32 with FreeRTOS.",
+    "education": [
+      {
+        "degree": "Master / MCIL in Electrotechnics & Embedded Systems",
+        "institution": "Faculty of Technology",
+        "period": "Specialized Program",
+        "details": "Power electronics, industrial motor drives, STM32/ESP32 microcontrollers, and automation."
+      }
+    ],
+    "experience": [
+      {
+        "role": "Founder & Lead Embedded Engineer",
+        "organization": "Iotrixa (Arrêté 1275 Startup Project)",
+        "period": "2024 - Present",
+        "bulletPoints": [
+          "Designed custom single and multi-layer PCBs in KiCad with isolated ground planes and transient protection.",
+          "Architected IoT telemetry boards integrating ESP32-C3, AC-DC buck converters, and optoisolated relays.",
+          "Implemented MQTT over TLS communications with cloud dashboards for remote telemetry."
+        ]
+      },
+      {
+        "role": "Hardware & Embedded Control Engineer",
+        "organization": "National Robotics Tournament Team",
+        "period": "2024 - 2025",
+        "bulletPoints": [
+          "Designed motor driver circuits and closed-loop PID velocity control firmware.",
+          "Integrated ultrasonic sensor arrays and optical quadrature encoders for autonomous navigation."
+        ]
+      }
+    ]
+  },
+  "resumeUrl": "resume.pdf",
+  "resumeFilename": "Mohammed_Moulay_Lekbir_Resume.pdf"
+}
