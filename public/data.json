@@ -50,7 +50,10 @@
         "https://lh3.googleusercontent.com/d/1a1DCVpvhaxXxcx-1s5C1dP4XuXcPyJ9S",
         "https://lh3.googleusercontent.com/d/1oIcaaPl_4lj258rPpZEit_5zHTjYnNJX",
         "https://lh3.googleusercontent.com/d/1tvvcmsO209lTFhpZoh2hUl_a609gSETZ"
-      ]
+      ],
+      "codeFilename": "telemetry_task.c",
+      "codeLanguage": "c",
+      "code": "/**\n * Iotrixa Smart Hardware - FreeRTOS Telemetry & Actuation Task\n * Target: ESP32-C3 Supermini RISC-V | Framework: ESP-IDF / Arduino\n */\n#include <WiFi.h>\n#include <PubSubClient.h>\n\n#define RELAY_CH1_PIN    4\n#define SENSOR_ADC_PIN   1\n#define STATUS_LED_PIN   8\n\nWiFiClient espClient;\nPubSubClient mqttClient(espClient);\n\nvoid vTelemetryTask(void *pvParameters) {\n  char payload[128];\n  for (;;) {\n    int rawAdc = analogRead(SENSOR_ADC_PIN);\n    float voltage = (rawAdc / 4095.0f) * 3.3f;\n    \n    snprintf(payload, sizeof(payload),\n      \"{\\\"device\\\":\\\"iotrixa-01\\\",\\\"adc\\\":%d,\\\"volt\\\":%.3f,\\\"relay\\\":%d}\",\n      rawAdc, voltage, digitalRead(RELAY_CH1_PIN));\n    \n    if (mqttClient.connected()) {\n      mqttClient.publish(\"iotrixa/telemetry/nodes\", payload);\n    }\n    vTaskDelay(pdMS_TO_TICKS(1000));\n  }\n}"
     },
     {
       "id": "safebelt",
@@ -81,7 +84,10 @@
         "https://lh3.googleusercontent.com/d/1ViA3bChZzh80aOml1yFZcFS6-wjYkT8i",
         "https://lh3.googleusercontent.com/d/1bC_H7O5qoYa9VDIOnMa1NJamyfXFJH2y",
         "https://lh3.googleusercontent.com/d/1lrLhL459hESjPR8NMlnHXYMpj6erRv9v"
-      ]
+      ],
+      "codeFilename": "motor_fault_isr.c",
+      "codeLanguage": "c",
+      "code": "/**\n * SafeBelt High-Reliability Motor Controller\n * Target: STM32F401 ARM Cortex-M4 @ 84MHz\n * Sub-Microsecond Hardware Overcurrent Shutoff ISR\n */\n#include \"stm32f4xx_hal.h\"\n\nextern TIM_HandleTypeDef htim1;\n\nvoid HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {\n  if (GPIO_Pin == OVERCURRENT_COMP_PIN) {\n    // Immediate hardware PWM disable (<450ns response)\n    __HAL_TIM_MOE_DISABLE(&htim1);\n    htim1.Instance->CCR1 = 0;\n    htim1.Instance->CCR2 = 0;\n    \n    // Latch safety crowbar & activate optical fault signal\n    HAL_GPIO_WritePin(FAULT_LATCH_PORT, FAULT_LATCH_PIN, GPIO_PIN_SET);\n    HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_SET);\n    \n    RS485_BroadcastAlert(ALERT_CODE_OVERCURRENT);\n  }\n}"
     },
     {
       "id": "robotics",
@@ -108,7 +114,10 @@
       "gallery": [
         "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
         "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&auto=format&fit=crop&q=80"
-      ]
+      ],
+      "codeFilename": "pid_velocity_controller.cpp",
+      "codeLanguage": "c",
+      "code": "/**\n * Autonomous Navigation Robot - Closed-Loop PID Velocity Controller\n * Quadrature Optical Encoder Feedback\n */\nclass VelocityPID {\nprivate:\n  float kp = 1.25f, ki = 0.08f, kd = 0.03f;\n  float integral = 0.0f, lastError = 0.0f;\n  float outputMin = -255.0f, outputMax = 255.0f;\n\npublic:\n  float compute(float targetRPM, float measuredRPM, float dt) {\n    float error = targetRPM - measuredRPM;\n    integral += error * dt;\n    if (integral > 100.0f) integral = 100.0f;\n    else if (integral < -100.0f) integral = -100.0f;\n    \n    float derivative = (dt > 0.0f) ? (error - lastError) / dt : 0.0f;\n    lastError = error;\n    \n    float output = (kp * error) + (ki * integral) + (kd * derivative);\n    if (output > outputMax) return outputMax;\n    if (output < outputMin) return outputMin;\n    return output;\n  }\n};"
     }
   ],
   "skills": [

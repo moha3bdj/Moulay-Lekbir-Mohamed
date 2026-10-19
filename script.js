@@ -300,10 +300,78 @@ public:
 const STORAGE_KEY = 'portfolio_app_data';
 const ADMIN_AUTH_KEY = 'portfolio_admin_logged_in';
 const ADMIN_PASS_KEY = 'portfolio_admin_password';
+const ADMIN_LOCKOUT_KEY = 'portfolio_admin_lockout';
 const DEFAULT_ADMIN_EMAIL = 'aedmoulay05@gmail.com';
-const DEFAULT_ADMIN_PASS = 'admin123';
+const DEFAULT_ADMIN_PASS_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'; // SHA-256('admin123')
 const THEME_KEY = 'portfolio_theme';
 const LANG_KEY = 'portfolio_lang';
+
+/**
+ * Security: HTML entity escaping to prevent Stored & Reflected XSS
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ * Security: Sanitize URLs to prevent javascript: / data: pseudo-protocol injection
+ */
+function sanitizeUrl(url) {
+  if (!url) return '';
+  const trimmed = String(url).trim();
+  if (/^(https?:|\/|mailto:|tel:)/i.test(trimmed)) {
+    return trimmed;
+  }
+  return '#';
+}
+
+/**
+ * Security: Prototype pollution prevention for JSON parsing & imports
+ */
+function sanitizeDataSchema(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const clean = Array.isArray(obj) ? [] : {};
+  for (const key of Object.keys(obj)) {
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      continue;
+    }
+    const val = obj[key];
+    if (val && typeof val === 'object') {
+      clean[key] = sanitizeDataSchema(val);
+    } else {
+      clean[key] = val;
+    }
+  }
+  return clean;
+}
+
+/**
+ * Security: Cryptographic SHA-256 Hashing for admin password verification
+ */
+async function hashStringSHA256(str) {
+  if (window.crypto && window.crypto.subtle) {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuf = await window.crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+      console.warn('SubtleCrypto error, falling back', e);
+    }
+  }
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(hash);
+}
 
 let currentTheme = localStorage.getItem(THEME_KEY) || 'dark';
 let currentLang = localStorage.getItem(LANG_KEY) || 'en';
@@ -1041,49 +1109,50 @@ function renderProjects() {
       const extraCount = images.length - 3;
       mediaMarkup = `
         <div class="project-media-collage">
-          <img src="${images[0]}" class="collage-item collage-main" alt="${p.title}" loading="lazy">
-          <img src="${images[1]}" class="collage-item" alt="${p.title}" loading="lazy">
+          <img src="${sanitizeUrl(images[0])}" class="collage-item collage-main" alt="${escapeHtml(p.title)}" loading="lazy">
+          <img src="${sanitizeUrl(images[1])}" class="collage-item" alt="${escapeHtml(p.title)}" loading="lazy">
           <div class="collage-more">
-            <img src="${images[2]}" class="collage-item" alt="${p.title}" loading="lazy">
-            ${extraCount > 0 ? `<div class="collage-overlay">+${extraCount} ${t('photosCount')}</div>` : ''}
+            <img src="${sanitizeUrl(images[2])}" class="collage-item" alt="${escapeHtml(p.title)}" loading="lazy">
+            ${extraCount > 0 ? `<div class="collage-overlay">+${extraCount} ${escapeHtml(t('photosCount'))}</div>` : ''}
           </div>
         </div>
       `;
     } else {
-      mediaMarkup = `<img src="${p.image}" alt="${p.title}" class="project-single-img" loading="lazy">`;
+      mediaMarkup = `<img src="${sanitizeUrl(p.image)}" alt="${escapeHtml(p.title)}" class="project-single-img" loading="lazy">`;
     }
 
     const isFeatured = idx === 0;
     const catIcon = (p.category || '').includes('IoT') ? 'fa-tower-broadcast' : (p.category || '').includes('PCB') ? 'fa-microchip' : 'fa-robot';
     const loc = getLocalizedProject(p);
+    const safeId = escapeHtml(p.id);
 
     const adminToolbar = isAdminLoggedIn() ? `
       <div class="project-card-admin-bar" onclick="event.stopPropagation()">
-        <button onclick="openProjectEditModal('${p.id}')" class="admin-card-btn" title="Edit Project"><i class="fa-solid fa-pen"></i> Edit</button>
-        <button onclick="deleteProject('${p.id}')" class="admin-card-btn admin-card-btn-del" title="Delete Project"><i class="fa-solid fa-trash"></i> Delete</button>
+        <button onclick="openProjectEditModal('${safeId}')" class="admin-card-btn" title="Edit Project"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button onclick="deleteProject('${safeId}')" class="admin-card-btn admin-card-btn-del" title="Delete Project"><i class="fa-solid fa-trash"></i> Delete</button>
       </div>
     ` : '';
 
     return `
-      <article class="project-card ${isFeatured ? 'project-featured' : ''}" onclick="openProjectModal('${p.id}')" tabindex="0" role="button" aria-label="View ${loc.title}">
+      <article class="project-card ${isFeatured ? 'project-featured' : ''}" onclick="openProjectModal('${safeId}')" tabindex="0" role="button" aria-label="View ${escapeHtml(loc.title)}">
         ${adminToolbar}
         <div class="project-media-wrapper">
           ${mediaMarkup}
           <div class="project-category-badge">
             <i class="fa-solid ${catIcon}"></i>
-            <span>${loc.category}</span>
+            <span>${escapeHtml(loc.category)}</span>
           </div>
         </div>
         <div class="project-card-body">
           <div class="project-card-header">
-            <h3 class="project-card-title">${loc.title}</h3>
+            <h3 class="project-card-title">${escapeHtml(loc.title)}</h3>
           </div>
-          <p class="project-card-desc">${loc.shortDesc}</p>
+          <p class="project-card-desc">${escapeHtml(loc.shortDesc)}</p>
           <div class="project-tech-tags">
-            ${(p.components || []).slice(0, 4).map(c => `<span class="tech-chip">${c}</span>`).join('')}
+            ${(p.components || []).slice(0, 4).map(c => `<span class="tech-chip">${escapeHtml(c)}</span>`).join('')}
           </div>
           <div class="project-card-action">
-            <span>${t('btnInspectSpecs')}</span>
+            <span>${escapeHtml(t('btnInspectSpecs'))}</span>
             <i class="fa-solid fa-arrow-right"></i>
           </div>
         </div>
@@ -1125,15 +1194,15 @@ function renderSkills() {
             <i class="fa-solid ${iconClass}"></i>
           </div>
           <div style="flex-grow: 1;">
-            <h3 class="skill-card-title">${locCat}</h3>
-            <span class="skill-card-count">${countLabel}</span>
+            <h3 class="skill-card-title">${escapeHtml(locCat)}</h3>
+            <span class="skill-card-count">${escapeHtml(countLabel)}</span>
           </div>
         </div>
         <ul class="skill-items-list">
           ${cat.items.map((item, itemIdx) => `
             <li class="skill-item">
               <span class="skill-check-icon"><i class="fa-solid fa-check"></i></span>
-              <span class="skill-text">${item}</span>
+              <span class="skill-text">${escapeHtml(item)}</span>
               ${isAdminLoggedIn() ? `<button onclick="removeSkillItem(${catIdx}, ${itemIdx})" class="admin-card-btn admin-card-btn-del" style="margin-left: auto; padding: 0.1rem 0.35rem;" title="Remove"><i class="fa-solid fa-xmark"></i></button>` : ''}
             </li>
           `).join('')}
@@ -1258,11 +1327,11 @@ function renderMilestones() {
             </div>
             <div class="timeline-content">
               <div class="timeline-meta">
-                <span class="timeline-year">${loc.year}</span>
-                <span class="timeline-issuer"><i class="fa-solid fa-building-columns"></i> ${loc.issuer}</span>
+                <span class="timeline-year">${escapeHtml(loc.year)}</span>
+                <span class="timeline-issuer"><i class="fa-solid fa-building-columns"></i> ${escapeHtml(loc.issuer)}</span>
               </div>
-              <h3 class="timeline-title">${loc.title}</h3>
-              <p class="timeline-desc">${loc.description}</p>
+              <h3 class="timeline-title">${escapeHtml(loc.title)}</h3>
+              <p class="timeline-desc">${escapeHtml(loc.description)}</p>
               ${adminActions}
             </div>
           </div>
@@ -1428,14 +1497,14 @@ function renderContactCards() {
   // 10. Admin Quick Panel Link (if logged in)
   if (isAdminLoggedIn()) {
     cards.push(`
-      <a href="javascript:void(0)" onclick="openAdminControlPanel()" class="contact-card" id="contact-card-admin" title="Open Admin Panel" style="border-style: dashed; border-color: var(--accent-primary);">
+      <button type="button" onclick="openAdminControlPanel()" class="contact-card" id="contact-card-admin" title="Open Admin Panel" style="border-style: dashed; border-color: var(--accent-primary); width: 100%; text-align: left; background: none; font: inherit; cursor: pointer;">
         <div class="contact-card-icon"><i class="fa-solid fa-sliders"></i></div>
         <div class="contact-card-details">
           <span class="contact-card-label" style="color: var(--accent-primary);">Admin Mode</span>
           <span class="contact-card-val">Modulate Channels &amp; Data</span>
         </div>
         <div class="contact-card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-      </a>
+      </button>
     `);
   }
 
@@ -1457,20 +1526,20 @@ function openProjectModal(id) {
   if (catEl) {
     catEl.innerHTML = `<i class="fa-solid ${catIcon}"></i> ${loc.category} &bull; ${t('modalSpecsHeader')}`;
   }
-  document.getElementById('modal-project-img').src = p.image;
+  document.getElementById('modal-project-img').src = sanitizeUrl(p.image);
   document.getElementById('modal-desc').innerText = loc.fullDescription || loc.shortDesc;
 
   // Specs
   const specsTable = document.getElementById('modal-specs-table');
   specsTable.innerHTML = Object.entries(p.specs || {}).map(([k, v]) => {
     const locKey = (specsTranslations[k] && specsTranslations[k][currentLang]) || k;
-    return `<tr><td>${locKey}</td><td>${v}</td></tr>`;
+    return `<tr><td>${escapeHtml(locKey)}</td><td>${escapeHtml(v)}</td></tr>`;
   }).join('');
 
   // Components
   const compList = document.getElementById('modal-components-list');
   compList.innerHTML = (p.components || []).map(c => `
-    <span class="modal-tech-chip">${c}</span>
+    <span class="modal-tech-chip">${escapeHtml(c)}</span>
   `).join('');
 
   // Firmware & Source Code
@@ -1504,10 +1573,11 @@ function openProjectModal(id) {
 
   // Gallery
   const allImages = p.gallery && p.gallery.length > 0 ? p.gallery : [p.image];
+  activeLightboxImages = allImages;
   const galGrid = document.getElementById('modal-gallery-grid');
   galGrid.innerHTML = allImages.map((img, i) => `
-    <div class="modal-gallery-thumb" onclick="openLightbox(${JSON.stringify(allImages).replace(/"/g, '&quot;')}, ${i})">
-      <img src="${img}" alt="${loc.title}">
+    <div class="modal-gallery-thumb" onclick="openLightbox(activeLightboxImages, ${i})">
+      <img src="${sanitizeUrl(img)}" alt="${escapeHtml(loc.title)}" loading="lazy">
     </div>
   `).join('');
 
@@ -1699,15 +1769,44 @@ function closeAdminAuthModal() {
   document.body.style.overflow = '';
 }
 
-function handleAdminLogin(e) {
+async function handleAdminLogin(e) {
   if (e) e.preventDefault();
-  const email = (document.getElementById('admin-email-input').value || '').trim();
-  const password = document.getElementById('admin-password-input').value;
   const alertEl = document.getElementById('admin-login-alert');
 
-  const validPassword = localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_ADMIN_PASS;
+  // Rate limiting / Brute-force protection
+  const now = Date.now();
+  let lockout = { attempts: 0, lockUntil: 0 };
+  try {
+    const raw = localStorage.getItem(ADMIN_LOCKOUT_KEY);
+    if (raw) lockout = JSON.parse(raw);
+  } catch (err) {}
 
-  if (email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase() && password === validPassword) {
+  if (lockout.lockUntil && now < lockout.lockUntil) {
+    const remainingSecs = Math.ceil((lockout.lockUntil - now) / 1000);
+    if (alertEl) {
+      alertEl.style.display = 'block';
+      alertEl.innerHTML = `<i class="fa-solid fa-lock"></i> Security Lockout: Too many failed attempts. Try again in <b>${remainingSecs}s</b>.`;
+    }
+    return;
+  }
+
+  const email = (document.getElementById('admin-email-input').value || '').trim();
+  const password = document.getElementById('admin-password-input').value || '';
+
+  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  const inputHash = await hashStringSHA256(password);
+
+  const isPasswordValid = storedPass
+    ? (inputHash === storedPass || password === storedPass)
+    : (inputHash === DEFAULT_ADMIN_PASS_HASH || password === 'admin123');
+
+  if (email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase() && isPasswordValid) {
+    // Reset lockout counter on successful authentication
+    localStorage.removeItem(ADMIN_LOCKOUT_KEY);
+    // Ensure password is migrated to SHA-256 hash in storage
+    if (!storedPass || storedPass === 'admin123') {
+      localStorage.setItem(ADMIN_PASS_KEY, DEFAULT_ADMIN_PASS_HASH);
+    }
     localStorage.setItem(ADMIN_AUTH_KEY, 'true');
     closeAdminAuthModal();
     updateAdminUI();
@@ -1719,9 +1818,20 @@ function handleAdminLogin(e) {
     setupResumeModal();
     showToast(`Welcome Mohammed! Admin Mode active.`);
   } else {
+    lockout.attempts = (lockout.attempts || 0) + 1;
+    if (lockout.attempts >= 5) {
+      lockout.lockUntil = now + 5 * 60 * 1000; // 5-minute cooldown
+      localStorage.setItem(ADMIN_LOCKOUT_KEY, JSON.stringify(lockout));
+      if (alertEl) {
+        alertEl.style.display = 'block';
+        alertEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Too many failed attempts. Login locked for 5 minutes.`;
+      }
+      return;
+    }
+    localStorage.setItem(ADMIN_LOCKOUT_KEY, JSON.stringify(lockout));
     if (alertEl) {
       alertEl.style.display = 'block';
-      alertEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Invalid credentials. Email must be <b>${DEFAULT_ADMIN_EMAIL}</b>. Default password: <b>admin123</b>`;
+      alertEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Invalid email or password. Attempt ${lockout.attempts} of 5.`;
     }
   }
 }
@@ -2862,13 +2972,18 @@ function deleteEducation(idx) {
 /**
  * 15. Security & Data Backup / Export
  */
-function handlePasswordChange(e) {
+async function handlePasswordChange(e) {
   if (e) e.preventDefault();
   const currPass = document.getElementById('admin-curr-pass').value;
   const newPass = document.getElementById('admin-new-pass').value;
-  const validPass = localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_ADMIN_PASS;
+  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  const currHash = await hashStringSHA256(currPass);
 
-  if (currPass !== validPass) {
+  const isCurrValid = storedPass
+    ? (currHash === storedPass || currPass === storedPass)
+    : (currHash === DEFAULT_ADMIN_PASS_HASH || currPass === 'admin123');
+
+  if (!isCurrValid) {
     alert('Incorrect current password.');
     return;
   }
@@ -2877,10 +2992,11 @@ function handlePasswordChange(e) {
     return;
   }
 
-  localStorage.setItem(ADMIN_PASS_KEY, newPass);
+  const newHash = await hashStringSHA256(newPass);
+  localStorage.setItem(ADMIN_PASS_KEY, newHash);
   document.getElementById('admin-curr-pass').value = '';
   document.getElementById('admin-new-pass').value = '';
-  showToast('Admin password updated successfully');
+  showToast('Admin password securely updated and hashed');
 }
 
 function exportDataJson() {
@@ -2913,7 +3029,8 @@ function importDataJsonFile(e) {
   const reader = new FileReader();
   reader.onload = function (evt) {
     try {
-      const parsed = JSON.parse(evt.target.result);
+      const rawParsed = JSON.parse(evt.target.result);
+      const parsed = sanitizeDataSchema(rawParsed);
       if (parsed && parsed.personal && parsed.projects) {
         appData = parsed;
         saveAppData('Imported custom dataset successfully');
@@ -2949,7 +3066,8 @@ function closeJsonPasteModal() {
 function applyPastedJson() {
   const raw = document.getElementById('raw-json-paste-textarea').value;
   try {
-    const parsed = JSON.parse(raw);
+    const rawParsed = JSON.parse(raw);
+    const parsed = sanitizeDataSchema(rawParsed);
     if (parsed && parsed.personal && parsed.projects) {
       appData = parsed;
       closeJsonPasteModal();

@@ -14,6 +14,8 @@
     content="KiCad PCB Designer, Embedded Systems, Electrotechnics, STM32, ESP32, FreeRTOS, Iotrixa, Arrêté 1275, Algeria">
   <meta name="author" content="Mohammed Abdeldjebar Moulay Lekbir">
   <meta name="robots" content="index, follow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -362,10 +364,10 @@
         <div class="footer-meta-links">
           <span data-i18n="footerTags">KiCad Hardware &bull; Embedded Systems &bull; High-Precision Engineering</span>
           <span class="footer-dot-sep" style="display: none;">&bull;</span>
-          <a href="javascript:void(0)" onclick="toggleAdminAuth()" class="admin-portal-link" id="link-admin-footer"
-            style="display: none;">
+          <button type="button" onclick="toggleAdminAuth()" class="admin-portal-link" id="link-admin-footer"
+            style="display: none; background: none; border: none; padding: 0; color: inherit; cursor: pointer; font: inherit;">
             <i class="fa-solid fa-shield-halved"></i> <span data-i18n="adminPortal">Admin Portal</span>
-          </a>
+          </button>
         </div>
       </div>
 
