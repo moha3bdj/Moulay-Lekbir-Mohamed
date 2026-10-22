@@ -34,6 +34,7 @@ let activeLightboxIndex = 0;
 
 // Embedded Fallback Data (KiCad PCB & Embedded Systems)
 const fallbackData = {
+  adminPasswordHash: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
   personal: {
     name: "Mohammed Abdeldjebar Moulay Lekbir",
     title: "Electrotechnics & Embedded Systems Engineer",
@@ -330,6 +331,59 @@ const DEFAULT_ADMIN_EMAIL = 'aedmoulay05@gmail.com';
 const DEFAULT_ADMIN_PASS_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'; // SHA-256('admin123')
 const THEME_KEY = 'portfolio_theme';
 const LANG_KEY = 'portfolio_lang';
+
+/**
+ * Cross-Device Admin Password Resolver:
+ * Hierarchy of active admin credentials:
+ * 1. Vite Environment Variable (VITE_ADMIN_PASS_HASH) for Vercel/production deployment
+ * 2. Browser Local Storage override (if modified on current device)
+ * 3. Central repository data.json dataset (synchronized cross-device via commit)
+ * 4. Stored pass fallback
+ * 5. Default SHA-256 hash for 'admin123'
+ */
+function getActiveAdminPasswordHash() {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_ADMIN_PASS_HASH) {
+      const envHash = String(import.meta.env.VITE_ADMIN_PASS_HASH).trim();
+      if (envHash) return envHash;
+    }
+  } catch (e) {}
+
+  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  if (storedPass && storedPass !== DEFAULT_ADMIN_PASS_HASH && storedPass !== 'admin123') {
+    return storedPass;
+  }
+
+  if (appData && appData.adminPasswordHash && typeof appData.adminPasswordHash === 'string') {
+    const jsonHash = appData.adminPasswordHash.trim();
+    if (jsonHash) return jsonHash;
+  }
+
+  if (storedPass) return storedPass;
+
+  return DEFAULT_ADMIN_PASS_HASH;
+}
+
+function getActivePasswordSource() {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_ADMIN_PASS_HASH) {
+      if (String(import.meta.env.VITE_ADMIN_PASS_HASH).trim()) {
+        return 'Environment Variable (VITE_ADMIN_PASS_HASH)';
+      }
+    }
+  } catch (e) {}
+
+  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  if (storedPass && storedPass !== DEFAULT_ADMIN_PASS_HASH && storedPass !== 'admin123') {
+    return 'Local Device Storage';
+  }
+
+  if (appData && appData.adminPasswordHash && typeof appData.adminPasswordHash === 'string' && appData.adminPasswordHash !== DEFAULT_ADMIN_PASS_HASH) {
+    return 'Synchronized data.json';
+  }
+
+  return 'Default Password (admin123)';
+}
 
 /**
  * Security: HTML entity escaping to prevent Stored & Reflected XSS
@@ -1003,7 +1057,7 @@ async function initPortfolio() {
 
   if (!appData) {
     try {
-      const res = await fetch('data.json');
+      const res = await fetch('data.json', { cache: 'no-cache' });
       if (res.ok) {
         appData = await res.json();
       } else {
@@ -1782,6 +1836,17 @@ function openAdminAuthModal() {
     if (emailInput) emailInput.value = DEFAULT_ADMIN_EMAIL;
     const passInput = document.getElementById('admin-password-input');
     if (passInput) passInput.value = '';
+
+    const hintEl = document.getElementById('admin-pass-hint');
+    if (hintEl) {
+      const activeHash = getActiveAdminPasswordHash();
+      if (activeHash === DEFAULT_ADMIN_PASS_HASH) {
+        hintEl.innerHTML = `Default password: <code class="code-tag">admin123</code> (customizable in Security settings)`;
+      } else {
+        hintEl.innerHTML = `<i class="fa-solid fa-shield-halved" style="color: var(--accent-primary);"></i> Secured with custom admin password`;
+      }
+    }
+
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     setTimeout(() => passInput && passInput.focus(), 150);
@@ -1818,20 +1883,20 @@ async function handleAdminLogin(e) {
   const email = (document.getElementById('admin-email-input').value || '').trim();
   const password = document.getElementById('admin-password-input').value || '';
 
-  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  const activeHash = getActiveAdminPasswordHash();
   const inputHash = await hashStringSHA256(password);
 
-  const isPasswordValid = storedPass
-    ? (inputHash === storedPass || password === storedPass)
-    : (inputHash === DEFAULT_ADMIN_PASS_HASH || password === 'admin123');
+  const isPasswordValid = (
+    inputHash === activeHash ||
+    password === activeHash ||
+    (activeHash === DEFAULT_ADMIN_PASS_HASH && password === 'admin123')
+  );
 
   if (email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase() && isPasswordValid) {
     // Reset lockout counter on successful authentication
     localStorage.removeItem(ADMIN_LOCKOUT_KEY);
-    // Ensure password is migrated to SHA-256 hash in storage
-    if (!storedPass || storedPass === 'admin123') {
-      localStorage.setItem(ADMIN_PASS_KEY, DEFAULT_ADMIN_PASS_HASH);
-    }
+    // Ensure validated hash is saved to this device's storage
+    localStorage.setItem(ADMIN_PASS_KEY, activeHash);
     localStorage.setItem(ADMIN_AUTH_KEY, 'true');
     closeAdminAuthModal();
     updateAdminUI();
@@ -1970,6 +2035,7 @@ function openAdminControlPanel(tab = 'profile') {
   populateAdminSkillsList();
   populateAdminMilestonesList();
   populateAdminResume();
+  populateAdminSecurityInfo();
 }
 
 function closeAdminControlPanel() {
@@ -1985,6 +2051,9 @@ function switchAdminTab(tabName) {
   document.querySelectorAll('.admin-tab-content').forEach(content => {
     content.classList.toggle('active', content.id === `admin-tab-${tabName}`);
   });
+  if (tabName === 'security') {
+    populateAdminSecurityInfo();
+  }
 }
 
 function updateAdminTabCounts() {
@@ -2997,16 +3066,44 @@ function deleteEducation(idx) {
 /**
  * 15. Security & Data Backup / Export
  */
+function populateAdminSecurityInfo() {
+  const activeHash = getActiveAdminPasswordHash();
+  const source = getActivePasswordSource();
+  const isDefault = (activeHash === DEFAULT_ADMIN_PASS_HASH);
+
+  const badgeWrap = document.getElementById('admin-security-status-badge-wrap');
+  if (badgeWrap) {
+    badgeWrap.innerHTML = isDefault
+      ? `<span id="admin-security-status-badge" class="admin-status-badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> Default Password</span>`
+      : `<span id="admin-security-status-badge" class="admin-status-badge badge-success"><i class="fa-solid fa-circle-check"></i> Custom Password</span>`;
+  }
+
+  const srcEl = document.getElementById('admin-security-source');
+  if (srcEl) {
+    srcEl.innerText = source;
+  }
+
+  const hashEl = document.getElementById('admin-security-hash-preview');
+  if (hashEl) {
+    hashEl.innerText = activeHash ? `${activeHash.substring(0, 8)}...${activeHash.substring(activeHash.length - 8)}` : 'None';
+    hashEl.title = activeHash || '';
+  }
+}
+
 async function handlePasswordChange(e) {
   if (e) e.preventDefault();
-  const currPass = document.getElementById('admin-curr-pass').value;
-  const newPass = document.getElementById('admin-new-pass').value;
-  const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+  const currPass = (document.getElementById('admin-curr-pass')?.value || '');
+  const newPass = (document.getElementById('admin-new-pass')?.value || '');
+  const confirmPass = (document.getElementById('admin-confirm-pass')?.value || '');
+
+  const activeHash = getActiveAdminPasswordHash();
   const currHash = await hashStringSHA256(currPass);
 
-  const isCurrValid = storedPass
-    ? (currHash === storedPass || currPass === storedPass)
-    : (currHash === DEFAULT_ADMIN_PASS_HASH || currPass === 'admin123');
+  const isCurrValid = (
+    currHash === activeHash ||
+    currPass === activeHash ||
+    (activeHash === DEFAULT_ADMIN_PASS_HASH && currPass === 'admin123')
+  );
 
   if (!isCurrValid) {
     alert('Incorrect current password.');
@@ -3016,15 +3113,75 @@ async function handlePasswordChange(e) {
     alert('New password must be at least 6 characters.');
     return;
   }
+  if (confirmPass && newPass !== confirmPass) {
+    alert('New passwords do not match. Please verify and re-type.');
+    return;
+  }
 
   const newHash = await hashStringSHA256(newPass);
+
+  // 1. Update current device's local storage
   localStorage.setItem(ADMIN_PASS_KEY, newHash);
-  document.getElementById('admin-curr-pass').value = '';
-  document.getElementById('admin-new-pass').value = '';
-  showToast('Admin password securely updated and hashed');
+
+  // 2. Persist in central appData for cross-device dataset export
+  if (!appData) {
+    appData = JSON.parse(JSON.stringify(fallbackData));
+  }
+  appData.adminPasswordHash = newHash;
+  saveAppData('Admin password securely updated');
+
+  // 3. Clear inputs
+  if (document.getElementById('admin-curr-pass')) document.getElementById('admin-curr-pass').value = '';
+  if (document.getElementById('admin-new-pass')) document.getElementById('admin-new-pass').value = '';
+  if (document.getElementById('admin-confirm-pass')) document.getElementById('admin-confirm-pass').value = '';
+
+  // 4. Update UI & Display cross-device sync guide alert
+  populateAdminSecurityInfo();
+  const alertEl = document.getElementById('admin-sync-success-alert');
+  if (alertEl) {
+    alertEl.style.display = 'block';
+    alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  showToast('Admin password updated! Follow the sync guide to apply to other devices.');
+}
+
+function copyViteEnvSnippet() {
+  const hash = getActiveAdminPasswordHash();
+  const snippet = `VITE_ADMIN_PASS_HASH=${hash}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(snippet).then(() => {
+      showToast('Copied VITE_ADMIN_PASS_HASH to clipboard');
+    }).catch(() => {
+      prompt('Copy your Vercel Environment Variable:', snippet);
+    });
+  } else {
+    prompt('Copy your Vercel Environment Variable:', snippet);
+  }
+}
+
+function copyActiveHash() {
+  const hash = getActiveAdminPasswordHash();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(hash).then(() => {
+      showToast('SHA-256 hash copied to clipboard');
+    }).catch(() => {
+      prompt('Copy your SHA-256 Hash:', hash);
+    });
+  } else {
+    prompt('Copy your SHA-256 Hash:', hash);
+  }
 }
 
 function exportDataJson() {
+  if (!appData) {
+    appData = JSON.parse(JSON.stringify(fallbackData));
+  }
+  // Guarantee active admin password hash is embedded into exported JSON
+  const activeHash = getActiveAdminPasswordHash();
+  if (activeHash) {
+    appData.adminPasswordHash = activeHash;
+  }
   const jsonStr = JSON.stringify(appData, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -3035,10 +3192,17 @@ function exportDataJson() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('data.json downloaded to your device');
+  showToast('data.json downloaded (with cross-device password hash)');
 }
 
 function copyDataJson() {
+  if (!appData) {
+    appData = JSON.parse(JSON.stringify(fallbackData));
+  }
+  const activeHash = getActiveAdminPasswordHash();
+  if (activeHash) {
+    appData.adminPasswordHash = activeHash;
+  }
   const jsonStr = JSON.stringify(appData, null, 2);
   navigator.clipboard.writeText(jsonStr).then(() => {
     showToast('Complete JSON copied to clipboard');
@@ -3058,7 +3222,11 @@ function importDataJsonFile(e) {
       const parsed = sanitizeDataSchema(rawParsed);
       if (parsed && parsed.personal && parsed.projects) {
         appData = parsed;
+        if (parsed.adminPasswordHash && typeof parsed.adminPasswordHash === 'string') {
+          localStorage.setItem(ADMIN_PASS_KEY, parsed.adminPasswordHash.trim());
+        }
         saveAppData('Imported custom dataset successfully');
+        populateAdminSecurityInfo();
         openAdminControlPanel('profile');
       } else {
         alert('Invalid data.json schema. Required "personal" and "projects" objects.');
@@ -3073,6 +3241,9 @@ function importDataJsonFile(e) {
 function openJsonPasteModal() {
   const modal = document.getElementById('json-paste-modal');
   if (modal) {
+    if (!appData) appData = JSON.parse(JSON.stringify(fallbackData));
+    const activeHash = getActiveAdminPasswordHash();
+    if (activeHash) appData.adminPasswordHash = activeHash;
     document.getElementById('raw-json-paste-textarea').value = JSON.stringify(appData, null, 2);
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -3095,8 +3266,12 @@ function applyPastedJson() {
     const parsed = sanitizeDataSchema(rawParsed);
     if (parsed && parsed.personal && parsed.projects) {
       appData = parsed;
+      if (parsed.adminPasswordHash && typeof parsed.adminPasswordHash === 'string') {
+        localStorage.setItem(ADMIN_PASS_KEY, parsed.adminPasswordHash.trim());
+      }
       closeJsonPasteModal();
       saveAppData('Applied raw JSON dataset');
+      populateAdminSecurityInfo();
       openAdminControlPanel('profile');
     } else {
       alert('Invalid structure. Must contain "personal" and "projects".');
@@ -3109,8 +3284,10 @@ function applyPastedJson() {
 function resetToDefaultData() {
   if (!confirm('Are you sure you want to reset all modifications? This will erase all custom changes in your browser and reload the factory default portfolio.')) return;
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(ADMIN_PASS_KEY);
   appData = JSON.parse(JSON.stringify(fallbackData));
   saveAppData('Reset to factory default portfolio');
+  populateAdminSecurityInfo();
   openAdminControlPanel('profile');
 }
 
@@ -3295,7 +3472,8 @@ async function handleContactSubmit(e) {
   }
 
   try {
-    const res = await fetch('/api/contact', {
+    const endpoint = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_CONTACT_API_ENDPOINT) || '/api/contact';
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -3414,6 +3592,9 @@ Object.assign(window, {
   handleSaveEducation,
   deleteEducation,
   handlePasswordChange,
+  populateAdminSecurityInfo,
+  copyViteEnvSnippet,
+  copyActiveHash,
   exportDataJson,
   copyDataJson,
   importDataJsonFile,

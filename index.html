@@ -605,7 +605,7 @@
                 <i class="fa-solid fa-eye"></i>
               </button>
             </div>
-            <span class="admin-input-hint">Default password: <code class="code-tag">admin123</code> (customizable in
+            <span class="admin-input-hint" id="admin-pass-hint">Default password: <code class="code-tag">admin123</code> (customizable in
               Security settings)</span>
           </div>
         </div>
@@ -929,29 +929,100 @@
 
         <!-- TAB 6: Backup & Security -->
         <div id="admin-tab-security" class="admin-tab-content">
+          <!-- Status Block -->
+          <div class="admin-section-block" style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <h4 class="admin-tab-heading" style="margin-bottom: 0.25rem;"><i class="fa-solid fa-shield-halved"></i> Admin Authentication Status</h4>
+                <p class="admin-tab-sub">Current active credentials controlling access to this administrative panel.</p>
+              </div>
+              <div id="admin-security-status-badge-wrap">
+                <span id="admin-security-status-badge" class="admin-status-badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> Default Password</span>
+              </div>
+            </div>
+            <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; font-size: 0.825rem;">
+              <div>
+                <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Credential Source</span>
+                <span id="admin-security-source" style="font-family: var(--font-mono); color: var(--text-primary); font-weight: 500;">Default (admin123)</span>
+              </div>
+              <div>
+                <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Active Hash (SHA-256)</span>
+                <span id="admin-security-hash-preview" style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.75rem;">240be518...c720a9</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password Change Form -->
           <div class="admin-section-block">
             <h4 class="admin-tab-heading"><i class="fa-solid fa-lock"></i> Change Admin Password</h4>
             <p class="admin-tab-sub">Update the password required to access this admin panel.</p>
-            <form onsubmit="handlePasswordChange(event)" style="margin-top: 0.75rem; max-width: 480px;">
+            <form onsubmit="handlePasswordChange(event)" style="margin-top: 0.75rem; max-width: 520px;">
               <div class="admin-form-group">
                 <label class="admin-label">Current Password</label>
                 <input type="password" id="admin-curr-pass" class="admin-input" required
-                  placeholder="Enter current password">
+                  placeholder="Enter current password" autocomplete="current-password">
               </div>
-              <div class="admin-form-group">
-                <label class="admin-label">New Password</label>
-                <input type="password" id="admin-new-pass" class="admin-input" required
-                  placeholder="Enter new password (min 6 characters)">
+              <div class="admin-form-row">
+                <div class="admin-form-group">
+                  <label class="admin-label">New Password</label>
+                  <input type="password" id="admin-new-pass" class="admin-input" required minlength="6"
+                    placeholder="Enter new password (min 6 chars)" autocomplete="new-password">
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-label">Confirm New Password</label>
+                  <input type="password" id="admin-confirm-pass" class="admin-input" required minlength="6"
+                    placeholder="Re-enter new password" autocomplete="new-password">
+                </div>
               </div>
               <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-key"></i> Update
                 Password</button>
             </form>
+
+            <!-- Cross-Device Sync Notification Guide -->
+            <div id="admin-sync-success-alert" class="admin-alert admin-alert-success" style="display: none; margin-top: 1rem;">
+              <i class="fa-solid fa-circle-check"></i> <b>Password updated for this device!</b> Follow the sync guide below to apply it across other devices.
+            </div>
+
+            <div class="admin-sync-card">
+              <h5 style="margin: 0 0 0.5rem 0; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary);">
+                <i class="fa-solid fa-arrows-rotate" style="color: var(--accent-primary);"></i> How Cross-Device Sync Works
+              </h5>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.75rem 0; line-height: 1.45;">
+                Because this portfolio is hosted statically without a separate database, browser password updates save locally first. To sync your new password to all devices (like your phone) and the live website:
+              </p>
+              
+              <div class="admin-sync-step">
+                <div class="admin-sync-step-num">1</div>
+                <div class="admin-sync-step-content">
+                  <b>Method 1: Commit data.json (Recommended)</b>
+                  <p style="margin: 0.25rem 0 0.5rem 0;">Your updated password hash is automatically embedded into <code>data.json</code>. Download it, replace <code>data.json</code> &amp; <code>public/data.json</code> in your repository, and push to GitHub. When Vercel rebuilds, all devices will immediately require your new password.</p>
+                  <button type="button" onclick="exportDataJson()" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-download"></i> Download Updated data.json
+                  </button>
+                </div>
+              </div>
+
+              <div class="admin-sync-step">
+                <div class="admin-sync-step-num">2</div>
+                <div class="admin-sync-step-content">
+                  <b>Method 2: Vercel Environment Variable</b>
+                  <p style="margin: 0.25rem 0 0.5rem 0;">Add <code>VITE_ADMIN_PASS_HASH</code> in your Vercel Project Settings &gt; Environment Variables. It overrides the password hash across all production builds.</p>
+                  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button type="button" onclick="copyViteEnvSnippet()" class="btn btn-secondary btn-sm">
+                      <i class="fa-solid fa-copy"></i> Copy VITE_ADMIN_PASS_HASH Snippet
+                    </button>
+                    <button type="button" onclick="copyActiveHash()" class="btn btn-secondary btn-sm">
+                      <i class="fa-solid fa-hashtag"></i> Copy Raw Hash
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="admin-section-block" style="margin-top: 1.75rem;">
             <h4 class="admin-tab-heading"><i class="fa-solid fa-file-export"></i> Permanent Export &amp; Backup</h4>
-            <p class="admin-tab-sub">Download your updated dataset as <code>data.json</code> to commit to GitHub or
-              upload to Vercel/Netlify.</p>
+            <p class="admin-tab-sub">Download your updated dataset (including portfolio data and cross-device password hash) as <code>data.json</code> to commit to GitHub or upload to Vercel/Netlify.</p>
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem;">
               <button onclick="exportDataJson()" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-download"></i> Download data.json

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found - Redirecting...</title>
+  <script>
+    // GitHub Pages SPA / 404 redirection to home
+    var pathSegments = window.location.pathname.split('/');
+    // Redirect to root of repository or base domain
+    var repoBase = '/' + (pathSegments[1] ? pathSegments[1] + '/' : '');
+    setTimeout(function() {
+      window.location.replace(repoBase);
+    }, 1500);
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #38bdf8;
+    }
+    p {
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+    }
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+      border: 1px solid #38bdf8;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    a:hover {
+      background: #38bdf8;
+      color: #0b0f19;
+    }
+  </style>
+</head>
+<body>
+  <h1>404</h1>
+  <p>The requested page was not found. Redirecting you to the portfolio homepage...</p>
+  <a href="./">Return Home Immediately</a>
+</body>
+</html>

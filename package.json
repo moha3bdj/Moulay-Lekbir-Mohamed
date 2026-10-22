@@ -2,6 +2,7 @@
   "name": "moulay",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Portfolio of Mohammed Abdeldjebar Moulay Lekbir - Electrotechnics & Embedded Systems Engineer",
   "scripts": {
     "dev": "vite --port 3000 --host",
